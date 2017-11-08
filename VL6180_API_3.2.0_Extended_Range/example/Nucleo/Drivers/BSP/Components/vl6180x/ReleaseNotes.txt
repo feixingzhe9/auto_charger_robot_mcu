@@ -1,0 +1,116 @@
+########################################################
+# ReleaseNotes: 3.2.0 - October 2015
+########################################################
+
+* [API] Fixed ranging instabilities introduced in API 3.0.0
+* [API] Fixed Dmax calculation when xTalk compsentation rate is not null
+* [API] Added API function to enable & configure Range Ignore feature : VL6180x_RangeIgnoreSetEnable() & VL6180x_RangeIgnoreConfigure()
+* [API] Removed register caching from VL6180x_RangeGetMeasurementIfReady() : Caching now done only in VL6180x_RangeGetMeasurement() (if data is ready)
+* [API] Removed errorStatus 17 generation introduced in API 3.1.0 (causing bad side effects in wrap-around conditions)
+* [DOCS] Enforced the message that multiple calls to VL6180x_InitData without resetting the device is strongly forbidden (Specially, 
+         once VL6180x_RangeIgnoreConfigure is called, next call to VL6180x_InitData (without reseting the device) will result in wrong ranging operation)
+* [EXAMPLE] Upgraded Nucleo F401 & L053 Cube drivers to v1.8.0 and 1.3.0 respectively
+
+########################################################
+# ReleaseNotes: 3.1.0 - July 2015
+########################################################
+
+* [API] Added two ranging errorStatus code : 17 when WAF filtering decision is on-going and 18 when ranging data is not ready
+* [API] New behaviour of VL6180x_RangeGetMeasurementIfReady() API function : Range.errorStatus=18 (DataNotReady) now returned when new measurement is not ready
+* [API] VL6180x_RangeGetMeasurementIfReady() does not return a NOT_READY status anymore : check Range.errorStatus instead
+* [API] WAF : Several fixes to better filter wrap-around conditions
+* [API] WAF : errorStatus 17 now returned by WAF when filtering decision is on-going 
+* [API] Added multi-read and register caching support (speed improvement) : VL6180x_HAVE_MULTI_READ and VL6180x_CACHED_REG both defined and set to 1 in vl6180x_platform.h
+* [API] New VL6180x_RdMulti() function added in vl6180x_i2c.c file (for multi-read and register caching support)
+* [API] API source code now Linux Code Style compliant
+* [EXAMPLE] vl6180x_freeruning_ranging.c sample code updated to match with new behaviour of VL6180x_RangeGetMeasurementIfReady() API function  
+* [DOCS] API documentation updated for multi-read and register caching support
+* [DOCS] API documentation fix : VL6180x_SetI2CAddress() takes new address on 8 bits (not 7)
+
+########################################################
+# ReleaseNotes: 3.0.2 - June 2015
+########################################################
+
+* [API] VL6180x_SetOffsetCalibrationData() function now programs the offset (before this was just changing it internally to the API but not in the device)
+* [API] CROSSTALK_VALID_HEIGHT register value now scaled by scaling factor 
+* [API] MODE_MASK macro renamed as SYSRANGE_START_MODE_MASK to avoid any conflict (Android)
+* [EXAMPLE] Added more Nucleo examples : RangingWithSatellites and CodeSamples
+* [DOCS] Added more documentation in docs directory
+
+########################################################
+# ReleaseNotes: 3.0.1 - May 2015
+########################################################
+
+* Dmax : fix a clipping issue introduced in previous release (Dmax over-estimated in certain conditions)
+* WAF : Tune filter to avoid invalid distances with low reflectance moving targets
+
+########################################################
+# ReleaseNotes: 3.0.0 - April 2015
+########################################################
+
+* New API function for asynchronous operations (free-running) with sample code added : VL6180x_RangeGetMeasurementIfReady()
+* New API function to enable/disable Dmax computaion : VL6180x_DMaxSetState() 
+* ECE disabled (by default) when scaling factor is 2 or 3 (proximity configuration)
+* Dmax formula upgraded to adapt to xTalk compensation
+* WAF improvement for mid/high xTalk values
+* Docmentation updated (VL6180x_RangeGetMeasurementIfReady function usage)  
+* Nucleo project example now Cube compliant and available for Nucleo F401 & L053
+
+########################################################
+# ReleaseNotes: 3.0.0 Beta3
+########################################################
+
+* Changed files headers to be compliant with ST copyright
+* Added VL6180X_SAFE_POLLING_ENTER macro in platform/template/vl6180x_platform.h
+* Changed values returned by GetUpperLimit function
+* Changed VL6180x_RangeData_t structure fields (this has been actually done in 3.0.0 Beta2) : 
+*     - Added rtnAmbRate, rtnRate, rtnConvTime and refConvTime (transfered from RangeFilterResult_t)
+* Changed RangeFilterResult_t structure fields (this has been actually done in 3.0.0 Beta2) :
+*     - Removed refRate, refAmbRate 
+
+########################################################
+# ReleaseNotes: 3.0.0 Beta2
+########################################################
+
+* New directory structure : core, config, platform, example
+* Dmax now clipped to 400 mm
+* Negative offsets now supported
+* Removed any checks on IDENTIFICATION_MODULE_REV MAJOR and MINOR
+* SVN revision number added in all headers
+* STM32F401CubeMXBasic example added
+* simple ranging and als examples added
+* Doxygen documentation re-architectured 
+
+########################################################
+# ReleaseNotes: 2.1.1
+########################################################
+
+* ECE disabled (by default) in extended range (hybrid AF) mode
+* ports/customer directory renamed as ports/extended_range
+
+########################################################
+# ReleaseNotes: 2.1.0
+########################################################
+
+* DmaxSq renamed as Dmax : API finally implements square root operation (aproximation)
+* First implementation of Dmax calculation
+* New error code added : 16 for Ranging Filtered (wrap-around filter)
+* Removed 'filtered' field from RangeFilterResult_t structure (managed in error code)
+* Fixed logging issue present in 2.0.1
+* Updated Doxygen documentation
+
+
+########################################################
+# ReleaseNotes: 2.0.1
+########################################################
+
+* Renamed Dmax as DmaxSq (root square not done in API)
+* Fix signalRate_mcps
+* Doxygen documentation added
+
+
+########################################################
+# ReleaseNotes: 2.0.0
+########################################################
+
+* First implementation
