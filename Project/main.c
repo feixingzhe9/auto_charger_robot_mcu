@@ -11,12 +11,14 @@
 #include "tools.h"
 #include "can_protocol.h"
 #include "can.h"
+#include "led.h"
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
 	int vl6180x_status;
 	uint8_t cnt=0;
 	uint8_t light_ID = 0;
+    uint32_t tick = 0;
 	
 	Delay_Init();			//延时初始化
 	
@@ -36,12 +38,15 @@ int main(void)
 	VL6180x_init();
 	
 	swtich_init();
+    LED_Init();
     CanInit();
+    
 	
 	while(1)
 	{
 		delay_ms(10);
 		cnt = (cnt+1)%5;
+        tick++;
 
 		light_ID = Remote_Scan();													//获取红外读值
 		
@@ -53,6 +58,7 @@ int main(void)
 
 		com_receive();																		//处理串口数据
         can_protocol_period();  
+        IndicatorLed(tick);
 	}
 }
 

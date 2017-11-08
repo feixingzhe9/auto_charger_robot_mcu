@@ -12,6 +12,7 @@
 
 #include "can.h"
 #include "can_protocol.h"
+#include "can_fifo.h"
 
 #define CAN_FILTER_ID       (CAN_AUTO_CHARGER_ROBOT_MAC_ID << 13)
 #define CAN_FILTER_MASK     (0x00ff << 13)
@@ -104,10 +105,21 @@ extern CanRxMsg RxMessage;
 extern uint8_t test_rx_complete;
 void USB_LP_CAN1_RX0_IRQHandler(void)
 {
-    CanTxMsg tx_message;
+//    CanTxMsg tx_message;
+    
+    can_pkg_t can_pkg_tmp;
+    
     CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
     CAN_ClearFlag(CAN1,CAN_FLAG_FMP0);
     test_rx_complete = 1;
+    can_pkg_tmp.id.CANx_ID = RxMessage.ExtId;
+    can_pkg_tmp.len = RxMessage.DLC;
+    for(uint8_t i = 0; i < can_pkg_tmp.len; i++)
+    {
+        can_pkg_tmp.data.CanData[i] = RxMessage.Data[i];
+    }
+    CanFifoPutCanPkg(can_fifo,can_pkg_tmp);
+    
 #if 0 //send data back
     for(uint8_t i = 0; i < RxMessage.DLC; i++)
     {

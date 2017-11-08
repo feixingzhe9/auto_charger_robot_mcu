@@ -29,6 +29,8 @@
 #define SOURCE_ID_TRANSMIT_UPDATE       0x11
 #define SOURCE_ID_CHECK_TRANSMIT        0x12
 
+
+#define CAN_FIFO_SIZE                   250
 typedef union
 {
 	 struct{

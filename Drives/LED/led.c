@@ -47,12 +47,22 @@ void LED_Init(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
   /* 配置GPIOB.12为推挽输出模式 */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(GPIOB, &GPIO_InitStructure);
 	
-	GPIO_SetBits(GPIOB, GPIO_Pin_12);//设置GPIOB.12为高电平，关闭LED
+	GPIO_ResetBits(GPIOB, GPIO_Pin_1);//设置GPIOB.12为高电平，关闭LED
+}
+
+
+void IndicatorLedOn(void)
+{
+    GPIO_ResetBits(GPIOB, GPIO_Pin_1);//设置GPIOB.12为高电平，关闭LED
+}
+void IndicatorLedOff(void)
+{
+    GPIO_SetBits(GPIOB, GPIO_Pin_1);//设置GPIOB.12为高电平，关闭LED
 }
 
 /**
@@ -88,4 +98,38 @@ void LED_Toggle(void)
 	LED = !LED;
 }
 
+#define INDICATOR_LED_PERIOD                500/10
+#define INDICATOR_LED_POWER_ON_DELAY_TIME   10000/10  
+void IndicatorLed(uint32_t tick)
+{
+    static uint32_t start_tick = 0;
+    static uint8_t cnt = 0;
+    
+//    static uint8_t power_on_delay_flag = 0;
+//    if(power_on_delay_flag == 0)
+//    {
+//        if(tick < INDICATOR_LED_POWER_ON_DELAY_TIME)
+//        {
+//            return ;
+//        }
+//        power_on_delay_flag = 1;
+//    }
+    
+    if(start_tick == 0)
+    {
+        start_tick = tick;
+    }
+    if(tick - start_tick >= INDICATOR_LED_PERIOD)
+    {
+        if(cnt++ % 2)
+        {
+            IndicatorLedOn();
+        }
+        else
+        {
+            IndicatorLedOff();
+        }
+        start_tick = tick;
+    }
+}
 /********************* (C) COPYRIGHT 2014 WWW.UCORTEX.COM **********END OF FILE**********/

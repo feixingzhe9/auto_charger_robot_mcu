@@ -424,6 +424,11 @@
               <FileType>1</FileType>
               <FilePath>.\can_protocol.c</FilePath>
             </File>
+            <File>
+              <FileName>can_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\can_fifo.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
