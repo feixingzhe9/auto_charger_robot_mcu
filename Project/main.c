@@ -9,7 +9,8 @@
 #include "switch.h"
 #include "global.h"
 #include "tools.h"
-
+#include "can_protocol.h"
+#include "can.h"
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
@@ -35,6 +36,7 @@ int main(void)
 	VL6180x_init();
 	
 	swtich_init();
+    CanInit();
 	
 	while(1)
 	{
@@ -50,6 +52,7 @@ int main(void)
 		update_status(light_ID);													//更新所有状态
 
 		com_receive();																		//处理串口数据
+        can_protocol_period();  
 	}
 }
 
