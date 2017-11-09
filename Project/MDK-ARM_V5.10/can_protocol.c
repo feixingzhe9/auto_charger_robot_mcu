@@ -66,8 +66,8 @@ uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_len, ui
               //SW_VERSION
               break;
             case CAN_SOURCE_ID_GET_SYS_STATUS:
-                power_ctl.control_flag = data_in[0];
-                power_ctl.vol 				 = data_in[1];
+                power_ctl.control_flag  = data_in[0];
+                power_ctl.vol 		    = data_in[1];
             
                 data_out[0] = power_ctl.power_state;
                 data_out[1] = power_ctl.err_type;
