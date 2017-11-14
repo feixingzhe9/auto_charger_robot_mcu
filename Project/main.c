@@ -56,7 +56,6 @@ int main(void)
 		
 		update_status(light_ID);													//更新所有状态
 
-		//com_receive();																		//处理串口数据
         can_protocol_period();  
         IndicatorLed(tick);
 	}

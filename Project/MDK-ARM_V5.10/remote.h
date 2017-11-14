@@ -47,7 +47,7 @@
 #define W_2				30//50
 
 #define V_3				15//50
-#define W_3				15//20
+#define W_3				10//20
 
 extern uint8_t navigation_mode;
 extern uint8_t RmtCnt;	//按键按下的次数

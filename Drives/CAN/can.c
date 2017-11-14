@@ -65,13 +65,6 @@ uint8_t CanInit(void)
     can_filter_init_struct.CAN_FilterNumber = 0;
     can_filter_init_struct.CAN_FilterScale = CAN_FilterScale_32bit;
     
-    can_filter_init_struct.CAN_FilterIdHigh = 0x0000;
-    can_filter_init_struct.CAN_FilterIdLow = 0x0000;
-    can_filter_init_struct.CAN_FilterMaskIdHigh = 0x0000;
-    can_filter_init_struct.CAN_FilterMaskIdLow = 0x0000;
-    
-    
-    
     
     can_filter_init_struct.CAN_FilterIdHigh        = ((CAN_FILTER_ID << 3) >> 16) & 0xffff;
     can_filter_init_struct.CAN_FilterIdLow         = (uint16_t)(CAN_FILTER_ID << 3) | CAN_ID_EXT;
