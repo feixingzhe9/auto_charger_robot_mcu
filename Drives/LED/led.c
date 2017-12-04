@@ -32,6 +32,7 @@
  *
  ******************************************************************************/
 #include "led.h"
+#include "platform.h"
 
 /**
   * @brief  LED IO³õÊ¼»¯
@@ -98,9 +99,9 @@ void LED_Toggle(void)
 	LED = !LED;
 }
 
-#define INDICATOR_LED_PERIOD                500/10
-#define INDICATOR_LED_POWER_ON_DELAY_TIME   10000/10  
-void IndicatorLed(uint32_t tick)
+#define INDICATOR_LED_PERIOD                500/1
+#define INDICATOR_LED_POWER_ON_DELAY_TIME   10000/1 
+void IndicatorLed(void)
 {
     static uint32_t start_tick = 0;
     static uint8_t cnt = 0;
@@ -117,9 +118,9 @@ void IndicatorLed(uint32_t tick)
     
     if(start_tick == 0)
     {
-        start_tick = tick;
+        start_tick = os_get_time();
     }
-    if(tick - start_tick >= INDICATOR_LED_PERIOD)
+    if(os_get_time() - start_tick >= INDICATOR_LED_PERIOD)
     {
         if(cnt++ % 2)
         {
@@ -129,7 +130,7 @@ void IndicatorLed(uint32_t tick)
         {
             IndicatorLedOff();
         }
-        start_tick = tick;
+        start_tick = os_get_time();
     }
 }
 /********************* (C) COPYRIGHT 2014 WWW.UCORTEX.COM **********END OF FILE**********/

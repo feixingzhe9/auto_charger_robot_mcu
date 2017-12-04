@@ -19,6 +19,8 @@
 
 uint8_t CanInit(void)
 {
+
+    CanLongBufInit();
     
     //////-- CAN GPIO Init --//////
     GPIO_InitTypeDef GPIO_InitStructure; 
@@ -89,7 +91,6 @@ uint8_t CanInit(void)
   	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   	NVIC_Init(&NVIC_InitStructure);
     
-    CanLongBufInit();
 	return 0;
 }
 

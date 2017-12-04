@@ -335,7 +335,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\FWLib_3_5_0\CMSIS\CM3\CoreSupport;..\..\FWLib_3_5_0\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\inc;..\..\Project;..\..\Drives\LED;..\..\Drives\KEY;..\..\Common\DELAY;..\..\Drives\USART;..\..\Common;..\..\Drives\OLED;..\..\Drives\LCM1602;..\..\Drives\LCM12864;..\..\Drives\ADC;..\..\Drives\JOYSTICK;..\..\Drives\TIMER;..\..\Drives\RTC;..\..\Drives\EXTI;..\..\Drives\STANDBY;..\..\Drives\DMA;..\..\Drives\BEEP;..\..\Drives\EEPROM;..\..\Drives\SPI;..\..\Drives\NRF24L01;..\..\Drives\I2C;..\..\Drives\MPU6050;..\MDK-ARM_V5.10;.\RTE;..\..\VL6180_API_3.2.0_Extended_Range\config\extended_range;..\..\VL6180_API_3.2.0_Extended_Range\core\inc;..\..\VL6180_API_3.2.0_Extended_Range\example\code_samples;..\..\VL6180_API_3.2.0_Extended_Range\platform\cci-i2c;..\..\VL6180_API_3.2.0_Extended_Range\platform\template;..\..\Drives\CAN</IncludePath>
+              <IncludePath>..\..\FWLib_3_5_0\CMSIS\CM3\CoreSupport;..\..\FWLib_3_5_0\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\inc;..\..\Project;..\..\Drives\LED;..\..\Drives\KEY;..\..\Common\DELAY;..\..\Drives\USART;..\..\Common;..\..\Drives\OLED;..\..\Drives\LCM1602;..\..\Drives\LCM12864;..\..\Drives\ADC;..\..\Drives\JOYSTICK;..\..\Drives\TIMER;..\..\Drives\RTC;..\..\Drives\EXTI;..\..\Drives\STANDBY;..\..\Drives\DMA;..\..\Drives\BEEP;..\..\Drives\EEPROM;..\..\Drives\SPI;..\..\Drives\NRF24L01;..\..\Drives\I2C;..\..\Drives\MPU6050;..\MDK-ARM_V5.10;.\RTE;..\..\VL6180_API_3.2.0_Extended_Range\config\extended_range;..\..\VL6180_API_3.2.0_Extended_Range\core\inc;..\..\VL6180_API_3.2.0_Extended_Range\example\code_samples;..\..\VL6180_API_3.2.0_Extended_Range\platform\cci-i2c;..\..\VL6180_API_3.2.0_Extended_Range\platform\template;..\..\Drives\CAN;..\..\Common\Platform</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -543,6 +543,11 @@
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\DELAY\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\Platform\platform.c</FilePath>
             </File>
           </Files>
         </Group>

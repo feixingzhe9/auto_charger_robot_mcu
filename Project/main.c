@@ -20,8 +20,8 @@ int main(void)
 	uint8_t light_ID = 0;
     uint32_t tick = 0;
 	
-	Delay_Init();			//延时初始化
-	
+	//Delay_Init();			//延时初始化
+	SysTickInit();
 	COM_Init(COM1, 115200);//串口1初始化
 	COM1_DMA_init(115200);
 	
@@ -57,7 +57,7 @@ int main(void)
 		update_status(light_ID);													//更新所有状态
 
         can_protocol_period();  
-        IndicatorLed(tick);
+        IndicatorLed();
 	}
 }
 

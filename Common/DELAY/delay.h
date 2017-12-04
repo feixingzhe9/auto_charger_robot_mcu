@@ -34,10 +34,37 @@
 #define __DELAY_H
 #include "stm32f10x.h"
 
+#define SYSTICK_PERIOD                1      //1ms
 
 void Delay_Init(void);	//SysTick延时初始化
 void delay_ms(uint16_t xms);//毫秒延时函数
-void delay_us(uint32_t xus);//微秒延时函数
+//void delay_us(uint32_t xus);//微秒延时函数
+extern void SysTickInit(void);
+extern uint32_t os_get_time(void);
+
+#define asm            __asm
+#define delay_300ns()     do {asm("nop");asm("nop");asm("nop");asm("nop");\
+                              asm("nop");asm("nop");asm("nop");asm("nop");\
+                              asm("nop");asm("nop");asm("nop");asm("nop");\
+                              asm("nop");asm("nop");asm("nop");asm("nop");\
+                              asm("nop");asm("nop");asm("nop");asm("nop");\
+                              asm("nop");asm("nop");} while(1==0)
+                                
+#define delay_600ns()     do { asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");asm("nop");asm("nop");\
+                               asm("nop");asm("nop");} while(1==0)
+                                
+#define delay_us(n)       do { for(uint32_t i=0;i<n;i++){delay_300ns();delay_600ns();}\
+                                } while(0==1)
 
 #endif
 
