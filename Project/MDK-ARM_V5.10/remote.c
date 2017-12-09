@@ -233,6 +233,18 @@ void remote_calculate(uint8_t scan_value)
 			right += right_value[i];
 	//		printf("%d,%d,",left_value[i],right_value[i]);
 		}
+        
+        
+        power_ctl.ir_left_num = left;
+        power_ctl.ir_right_num = right;
+   
+
+
+
+        
+#if 0  
+        
+        
 		if((left>=RANGE)&&(right>=RANGE))
 		{
 	//		printf("直走\r\n");
@@ -302,6 +314,10 @@ void remote_calculate(uint8_t scan_value)
 	//			send_right();//发送右转		
 			}
 		}
+#endif
+        
+        
+        
 //		printf("left= %d,right= %d,light = %d \r\n",left,right,range_value);
 	}
 }

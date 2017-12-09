@@ -45,6 +45,8 @@ typedef struct power_control
 	uint8_t  err_type;						//故障位
 	uint16_t w;										//角速度
 	uint16_t v;										//线速度
+    uint8_t ir_left_num;
+    uint8_t ir_right_num;
 }POWER_CONTROL;
 
 

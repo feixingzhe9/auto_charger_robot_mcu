@@ -71,12 +71,19 @@ uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_len, ui
             
                 data_out[0] = power_ctl.power_state;
                 data_out[1] = power_ctl.err_type;
+                data_out[2] = power_ctl.ir_left_num;
+                data_out[3] = power_ctl.ir_right_num;
+                data_out[4] = (uint8_t)(range_value/10);
+            
+#if 0
                 data_out[2] = power_ctl.v>>8;
                 data_out[3] = power_ctl.v;
                 data_out[4] = power_ctl.w>>8;
                 data_out[5] = power_ctl.w;
-                data_out[6] = (uint8_t)(range_value/10);
-                return 7;
+#endif
+            
+                
+                return 5;
 //                break;
                 
             
