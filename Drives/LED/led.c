@@ -99,9 +99,9 @@ void LED_Toggle(void)
 	LED = !LED;
 }
 
-#define INDICATOR_LED_PERIOD                500/1
-#define INDICATOR_LED_POWER_ON_DELAY_TIME   10000/1 
-void IndicatorLed(void)
+#define INDICATOR_LED_PERIOD                500/10
+#define INDICATOR_LED_POWER_ON_DELAY_TIME   10000/10  
+void IndicatorLed(uint32_t tick)
 {
     static uint32_t start_tick = 0;
     static uint8_t cnt = 0;
@@ -118,9 +118,9 @@ void IndicatorLed(void)
     
     if(start_tick == 0)
     {
-        start_tick = os_get_time();
+        start_tick = tick;
     }
-    if(os_get_time() - start_tick >= INDICATOR_LED_PERIOD)
+    if(tick - start_tick >= INDICATOR_LED_PERIOD)
     {
         if(cnt++ % 2)
         {
@@ -130,7 +130,7 @@ void IndicatorLed(void)
         {
             IndicatorLedOff();
         }
-        start_tick = os_get_time();
+        start_tick = tick;
     }
 }
 /********************* (C) COPYRIGHT 2014 WWW.UCORTEX.COM **********END OF FILE**********/

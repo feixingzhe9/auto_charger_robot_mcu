@@ -63,8 +63,9 @@ extern uint32_t os_get_time(void);
                                asm("nop");asm("nop");asm("nop");asm("nop");\
                                asm("nop");asm("nop");} while(1==0)
                                 
-#define delay_us(n)       do { for(uint32_t i=0;i<n;i++){delay_300ns();delay_600ns();}\
+//#define delay_us(n)       do { for(uint32_t i=0;i<n;i++){delay_300ns();delay_600ns();}\
                                 } while(0==1)
+void delay_us(uint32_t xus);
 
 #endif
 
