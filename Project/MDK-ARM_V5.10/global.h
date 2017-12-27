@@ -47,6 +47,7 @@ typedef struct power_control
 	uint16_t v;										//ÏßËÙ¶È
     uint8_t ir_left_num;
     uint8_t ir_right_num;
+    uint8_t switch_status;
 }POWER_CONTROL;
 
 

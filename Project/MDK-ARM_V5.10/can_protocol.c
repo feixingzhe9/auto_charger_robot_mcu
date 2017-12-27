@@ -69,7 +69,9 @@ uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_len, ui
                 power_ctl.control_flag  = data_in[0];
                 power_ctl.vol 		    = data_in[1];
             
-                data_out[0] = power_ctl.power_state;
+            
+                //data_out[0] = power_ctl.power_state;
+                data_out[0] = power_ctl.switch_status;
                 data_out[1] = power_ctl.err_type;
                 data_out[2] = power_ctl.ir_left_num;
                 data_out[3] = power_ctl.ir_right_num;

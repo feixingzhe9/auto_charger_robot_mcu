@@ -122,7 +122,7 @@ void update_status(uint8_t id)
 		power_ctl.err_type &= (0xff-ERR_SWITCH);
 		power_ctl.err_type &= (0xff-ERR_NO_LIGHT_RECEIVE);
 	}
-	
+	power_ctl.switch_status = switch_status;
 	if(switch_status == SWITCH_ON)
 	{
 		if(prev_status != SWITCH_ON)
