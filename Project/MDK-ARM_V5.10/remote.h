@@ -23,6 +23,13 @@
 #define REMOTE_ID_POWER_99 		0x99    		//电量低于99%
 #define REMOTE_ID_POWER_100 	0xFF 		   	//电量满
 
+
+#define REMOTE_ID_POWER_1 		0x33    		//电量1
+#define REMOTE_ID_POWER_2 		0x66 		   	//电量2
+#define REMOTE_ID_POWER_3 		0x99    		//电量3
+#define REMOTE_ID_POWER_4 		0xbb    		//电量4
+#define REMOTE_ID_POWER_MAX 	    0xFF 		   	//电量5
+
 #define REMOTE_ID_POWER_ON 		0x5A    		//上电
 #define REMOTE_ID_POWER_OFF 	0xA5 		   	//下电
 

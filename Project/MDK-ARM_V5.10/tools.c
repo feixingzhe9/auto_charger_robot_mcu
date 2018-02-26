@@ -109,6 +109,9 @@ void update_status(uint8_t id)
 	static uint8_t prev_status = SWITCH_OFF;
 	static uint8_t time_out = 0;
 	static uint8_t time_wait = 0;
+
+    
+
 	
 	prev_status = switch_status;
 	switch_status = switch_scan();
@@ -165,6 +168,7 @@ void update_status(uint8_t id)
 				TIM_ITConfig(TIM3,TIM_IT_Update,DISABLE );
 				TIM4_CH1_PWM_Init(1895,0);	//72000/(1895+1) = 37.99K			//红外发射初始化		
 	//			printf("power_ctl.vol = %d\r\n",power_ctl.vol);
+#if 0
 				if(power_ctl.vol <= 33)//按实际电量发送红外灯
 				{
 					SendData2(REMOTE_ID_POWER_33,REMOTE_ID_POWER_33);
@@ -181,6 +185,34 @@ void update_status(uint8_t id)
 				{
 					SendData2(REMOTE_ID_POWER_100,REMOTE_ID_POWER_100);
 				}
+#else
+                
+                //power_ctl.vol = 50;////test code
+
+                if(power_ctl.vol < 25)//
+				{
+                    
+					SendData2(REMOTE_ID_POWER_1,REMOTE_ID_POWER_1);
+				}
+                else if(power_ctl.vol < 50)//
+                {
+                    SendData2(REMOTE_ID_POWER_2,REMOTE_ID_POWER_2);
+                }
+                else if(power_ctl.vol < 75)//
+                {
+                    SendData2(REMOTE_ID_POWER_3,REMOTE_ID_POWER_3);
+                }
+                else if(power_ctl.vol < 100)//
+                {
+                    SendData2(REMOTE_ID_POWER_4,REMOTE_ID_POWER_4);
+                }
+                else if(power_ctl.vol == 100)//
+                {
+                    SendData2(REMOTE_ID_POWER_MAX,REMOTE_ID_POWER_MAX);
+                }
+                
+                
+#endif
 				
 				TIM_ITConfig( TIM4,TIM_IT_Update|TIM_IT_CC2,ENABLE);
 				USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);

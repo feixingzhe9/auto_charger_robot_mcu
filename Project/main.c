@@ -19,6 +19,7 @@ int main(void)
 	uint8_t cnt=0;
 	uint8_t light_ID = 0;
     uint32_t tick = 0;
+
 	
 	Delay_Init();			//—” ±≥ı ºªØ
 	//SysTickInit();
@@ -58,6 +59,6 @@ int main(void)
 
         can_protocol_period();  
         IndicatorLed(tick);
-	}
+    }
 }
 
