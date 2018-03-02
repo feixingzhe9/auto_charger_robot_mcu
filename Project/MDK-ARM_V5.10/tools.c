@@ -187,7 +187,7 @@ void update_status(uint8_t id)
 				}
 #else
                 
-                //power_ctl.vol = 50;////test code
+//                power_ctl.vol = 50;////test code
 
                 if(power_ctl.vol < 25)//
 				{

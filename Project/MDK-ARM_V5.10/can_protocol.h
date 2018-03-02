@@ -12,6 +12,13 @@
 #define __CAN_PROTOCOL_H
 #include "stm32f10x.h"
 
+
+#define HW_VERSION                      "11"
+#define SW_VERSION                      "NoahC001M09A102"
+#define PROTOCOL_VERSION                "20170505R0101"
+
+
+
 #define CAN_USED    CAN1
 #define CAN_ID          (0x434D0000)      //CM
 

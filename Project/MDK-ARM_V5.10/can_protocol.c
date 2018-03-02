@@ -47,7 +47,7 @@ can_pkg_t can_pkg[CAN_FIFO_SIZE] = {0};
 
 
 #define CAN_READ_DATA               0x80
-uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_len, uint8_t *data_out)
+uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_in_len, uint8_t *data_out)
 {
     id->CanID_Struct.ACK = 1;
     id->CanID_Struct.DestMACID = id->CanID_Struct.SrcMACID;
@@ -63,8 +63,14 @@ uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_len, ui
           switch(id->CanID_Struct.SourceID)
           {
             case CAN_SOURCE_ID_READ_VERSION:
-              //SW_VERSION
-              break;
+                if(data_in_len == 1)
+                {
+                    memcpy(&data_out[1],SW_VERSION,sizeof(SW_VERSION));
+                    data_out[0] = strlen(SW_VERSION);
+                    return (data_out[0] + 1);
+                }
+
+                break;
             case CAN_SOURCE_ID_GET_SYS_STATUS:
                 power_ctl.control_flag  = data_in[0];
                 power_ctl.vol 		    = data_in[1];
