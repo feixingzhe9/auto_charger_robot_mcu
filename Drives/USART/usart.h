@@ -58,7 +58,7 @@
 #define COMn							3							//定义STM32支持的串口数	
 
 //定义print从哪个串口输出，如果不使用printf，则注释掉这一行
-#define PRINTF_SUPPORT		UCORTEX_COM1	
+#define PRINTF_SUPPORT		UCORTEX_COM3
 #ifdef PRINTF_SUPPORT
 #include <stdio.h>
 #endif
@@ -143,6 +143,9 @@ void COM_DMA_Polling_Init(COM_TypeDef COM, uint32_t MemoryBaseAddr, uint32_t Buf
 void COM1_DMA_init(uint32_t BaudRate);
 
 void reply_usart1(void);
+
+
+void print_uart_init(u32 bound);
 
 #endif
 

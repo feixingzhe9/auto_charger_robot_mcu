@@ -1,11 +1,13 @@
 #ifndef __REMOTE_H
 #define __REMOTE_H
-#include "stm32f10x.h"   
+#include "stm32f10x.h"
 #include "bitband.h"
 #include "usart.h"
 #include "tools.h"
 
-#define RDATA GPIOin(GPIOB,7)	 //红外数据输入脚
+#define RDATA_0 GPIOin(GPIOB,7)	 //红外数据输入脚
+#define RDATA_1 GPIOin(GPIOB,9)	 //红外数据输入脚
+#define RDATA_2 GPIOin(GPIOB,8)	 //红外数据输入脚
 #define	RANGE 		3
 #define VALUE_NUM   20
 
@@ -44,7 +46,7 @@
 
 #define LEFT			1
 #define RIGHT			0
-	
+
 #define W_HIGH		250
 
 #define V_1				140//140
@@ -56,11 +58,16 @@
 #define V_3				15//50
 #define W_3				10//20
 
+
+
+#define REMOTE_RCV_INTERFACE_NUM    3
+
+
 extern uint8_t navigation_mode;
-extern uint8_t RmtCnt;	//按键按下的次数
+extern uint8_t RmtCnt[REMOTE_RCV_INTERFACE_NUM];	//按键按下的次数
 
 void Remote_Init(void);    //红外传感器接收头引脚初始化
-u8 Remote_Scan(void);	  
+u8 Remote_Scan(void);
 void remote_calculate(uint8_t scan_value);
 #endif
 

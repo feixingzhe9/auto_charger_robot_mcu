@@ -2,6 +2,7 @@
 
 void set_straight(void)
 {
+    return ;
 //	power_ctl.v = 0xff00|(256-((navigation_mode == NAVIGATION_1)?V_1:(navigation_mode == NAVIGATION_2)?V_2:V_3));
 	power_ctl.v = (navigation_mode == NAVIGATION_1)?V_1:(navigation_mode == NAVIGATION_2)?V_2:V_3;
 	power_ctl.w = 0;
@@ -9,36 +10,42 @@ void set_straight(void)
 
 void set_left(void)
 {
+    return ;
 	power_ctl.w = 0xff00|(256 - ((navigation_mode == NAVIGATION_1)?W_1:(navigation_mode == NAVIGATION_2)?W_2:W_3));
 	power_ctl.v = 0;
 }
 
 void set_right(void)
 {
+    return ;
 	power_ctl.w = (navigation_mode == NAVIGATION_1)?W_1:(navigation_mode == NAVIGATION_2)?W_2:W_3;	
 	power_ctl.v = 0;
 }
 
 void set_forward(void)
 {
+    return ;
 	power_ctl.v = V_3;
 	power_ctl.w = 0;
 }
 
 void set_toward(void)
 {
+    return ;
 	power_ctl.v = 0xff00|(256 - V_3);
 	power_ctl.w = 0;
 }
 
 void set_stop(void)
 {
+    return ;
 	power_ctl.v = 0;
 	power_ctl.w = 0;
 }
 
 void set_high_w(uint8_t dir)
 {
+    return ;
 	if(dir == RIGHT)
 	{
 		power_ctl.w = W_HIGH;	
@@ -162,9 +169,9 @@ void update_status(uint8_t id)
 			{
 				timer_1s_flag = TIME_NOT_UP;
 				
-				TIM_ITConfig( TIM4,TIM_IT_Update|TIM_IT_CC2,DISABLE);
-				USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
-				DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,DISABLE); 
+				TIM_ITConfig( TIM4,TIM_IT_Update | TIM_IT_CC2 | TIM_IT_CC3 | TIM_IT_CC4,DISABLE);
+//				USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
+//				DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,DISABLE);
 				TIM_ITConfig(TIM3,TIM_IT_Update,DISABLE );
 				TIM4_CH1_PWM_Init(1895,0);	//72000/(1895+1) = 37.99K			//红外发射初始化		
 	//			printf("power_ctl.vol = %d\r\n",power_ctl.vol);
@@ -214,9 +221,9 @@ void update_status(uint8_t id)
                 
 #endif
 				
-				TIM_ITConfig( TIM4,TIM_IT_Update|TIM_IT_CC2,ENABLE);
-				USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-				DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,ENABLE); 
+				TIM_ITConfig(TIM4, TIM_IT_Update | TIM_IT_CC2 | TIM_IT_CC3 | TIM_IT_CC4, ENABLE);
+//				USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+//				DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,ENABLE);
 				TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE );
 				Remote_Init();			//红外接收初始化	
 				
@@ -246,6 +253,7 @@ void update_status(uint8_t id)
 
 void com_receive(void)
 {
+    return ;
 	if(COM1_RX_STATE == COM1_RX_NONE)
 	{
 		return;

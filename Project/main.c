@@ -23,8 +23,9 @@ int main(void)
 	
 	Delay_Init();			//延时初始化
 	//SysTickInit();
-	COM_Init(COM1, 115200);//串口1初始化
-	COM1_DMA_init(115200);
+    print_uart_init(115200);//串口1初始化
+//	COM_Init(COM1, 115200);//串口1初始化
+//	COM1_DMA_init(115200);
 	
 	Timer1_Init(9999, 7199);				//用于中断分时，计数频率 = 72000/(7199+1) = 10kHz，计数到(9999+1)为1s//ok
 	
@@ -41,7 +42,6 @@ int main(void)
 	swtich_init();
     LED_Init();
     CanInit();
-    
 	
 	while(1)
 	{

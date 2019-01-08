@@ -193,7 +193,7 @@ void TIM4_CH1_PWM_Init(u16 arr,u16 psc)
  	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //输出极性:TIM输出比较极性低
 	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_Low; //输出互补极性:TIM输出比较互补极性高
-  TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;//使能互补端输出
+    TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;//使能互补端输出
 	TIM_OCInitStructure.TIM_Pulse = 0;
 	TIM_OC1Init(TIM4, &TIM_OCInitStructure);  //将配置参数初始化外设TIM1 OC1
 

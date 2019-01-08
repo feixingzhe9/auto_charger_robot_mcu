@@ -85,15 +85,12 @@ int _sys_exit(int x)
 } 
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
-{      
+{
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART */
-  USART_SendData(PRINTF_SUPPORT, (uint8_t) ch);
-
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(PRINTF_SUPPORT, USART_FLAG_TC) == RESET)
-  {}    
-	return ch;
+    while(USART_GetFlagStatus(USART3, USART_FLAG_TC)==RESET);
+    USART_SendData(USART3, (uint8_t)ch);
+    return ch;
 }
 #endif
 /********************************* @end ***************************************/
@@ -212,6 +209,61 @@ void COM_Init(COM_TypeDef COM, uint32_t BaudRate)
   USART_Cmd(COM_USART[COM], ENABLE);										//开启串口
 	
 }
+
+
+
+
+
+
+
+void print_uart_init(u32 bound)
+{
+    //GPIO端口设置
+    GPIO_InitTypeDef GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);  //使能USART3
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+    USART_DeInit(USART3);   //复位串口3
+    //USART3_TX    PB.10
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10; //PB10
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽输出
+    GPIO_Init(GPIOB, &GPIO_InitStructure); //初始化PB10
+
+    //USART3_RX	  PB.11
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;//PB11PA10
+
+
+    //USART 初始化设置
+
+    USART_InitStructure.USART_BaudRate = bound;//
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位
+    USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
+
+    USART_Init(USART3, &USART_InitStructure); //初始化串口
+#if EN_USART1_RX		  //如果使能了接收
+    //Usart1 NVIC 配置
+    NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		//子优先级3
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
+
+    USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);//开启中断
+#endif
+    USART_Cmd(USART3, ENABLE);                    //使能串口
+
+}
+
+
+
+
 
 #if COM_DMA_TRANSFER
 /**
