@@ -157,16 +157,16 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
-void RTC_IRQHandler(void)
-{
-  if (RTC_GetITStatus(RTC_IT_SEC) != RESET)
-  {
-    RTC_ClearITPendingBit(RTC_IT_SEC);//清除RTC秒中断标志位
-    LED=!LED;							//LED翻转
-    TimeDisplay = 1;			//时间更新标志置1
-    RTC_WaitForLastTask();//等待RTC寄存器操作完成 
-  }
-}
+//void RTC_IRQHandler(void)
+//{
+//  if (RTC_GetITStatus(RTC_IT_SEC) != RESET)
+//  {
+//    RTC_ClearITPendingBit(RTC_IT_SEC);//清除RTC秒中断标志位
+//    LED=!LED;							//LED翻转
+//    TimeDisplay = 1;			//时间更新标志置1
+//    RTC_WaitForLastTask();//等待RTC寄存器操作完成 
+//  }
+//}
 
 /**
   * @brief  EXTI0中断服务程序
@@ -183,11 +183,6 @@ void EXTI0_IRQHandler(void)
 }
 
 
-static uint8_t Uart1_Rx = 0;          
-static uint8_t Uart1_head = 0;    
-static uint8_t Uart1_Len = 0;
-
-#define USART_LENGTH 6
 
 /**
   * @brief  USART1串口中断
@@ -196,74 +191,17 @@ static uint8_t Uart1_Len = 0;
   */
 void USART1_IRQHandler()
 {
-	uint8_t check = 0;
-	uint8_t i = 0;
-//	  static uint8_t Uart1_Buffer[64] = {0};
-		
-	if(USART_GetITStatus(USART1,USART_IT_RXNE) != RESET) 
+	if(USART_GetITStatus(USART1,USART_IT_RXNE) != RESET)
 	{
-		USART_ClearITPendingBit(USART1,USART_IT_RXNE);       
-		COM_RX_BUF[Uart1_Rx] = USART_ReceiveData(USART1);        
-		Uart1_Rx++;
-		Uart1_Rx &= 0xFF;
+		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
+        USART_ReceiveData(USART1);
 	}
-	
-	if(COM_RX_BUF[Uart1_head] != 0x5A) //判断头    
-	{
-		memset(COM_RX_BUF,0,Uart1_Rx);
-		Uart1_Rx = 0;
-		return;  
-	}      
-   
-	Uart1_Len = Uart1_Rx - Uart1_head; //??  
-	if(Uart1_Len > USART_LENGTH)
-	{
-		memset(COM_RX_BUF,0,Uart1_Rx);
-		Uart1_Rx = 0;
-		Uart1_Len = 0;
-		return;
-	}
-		
-	if(COM_RX_BUF[Uart1_Rx-1] == 0xA5)
-	{ 
-		Uart1_Len = Uart1_Rx - Uart1_head; //??  
-		for(i = 0;i < USART_LENGTH-2;i++)
-		{
-			check += COM_RX_BUF[i];
-		}
-		
-		if((Uart1_Len != USART_LENGTH)||(COM_RX_BUF[USART_LENGTH-2] != check))
-		{
-			memset(COM_RX_BUF,0,Uart1_Rx);
-			Uart1_Rx = 0;
-			Uart1_Len = 0;
-			return;
-		}
-		Uart1_Rx = 0;
-		Uart1_Len = 0;    
-		if((COM_RX_BUF[1] > 2)||(COM_RX_BUF[2] > 100))
-//		if(COM_RX_BUF[1] > 2)
-		{
-			COM1_RX_STATE = COM1_RX_GET_WRONG;		
-			memset(COM_RX_BUF,0,Uart1_Rx);
-			return;
-		}
-		else
-		{
-			COM1_RX_STATE = COM1_RX_GET_RIGHT;	
-			power_ctl.control_flag = COM_RX_BUF[1];
-			power_ctl.vol 				 = COM_RX_BUF[2];
-			USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);//关闭串口1接收中断
-		}
-	}      
-	
+
 	if(USART_GetFlagStatus(USART1,USART_FLAG_ORE) == SET) //判断是否溢出    
 	{       
 		USART_ClearFlag(USART1,USART_FLAG_ORE); //?SR     
 		USART_ReceiveData(USART1); //?DR    
-	}    
-		
-
+	}
 }
 
 /**
@@ -278,7 +216,7 @@ void USART2_IRQHandler(void)
 	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)	//接收中断
 	{
 		Res = USART_ReceiveData(USART2);	//读取接收到的数据
-		USART_SendData(USART2, Res);			//将接收到的数据发送出去  		 
+//		USART_SendData(USART2, Res);			//将接收到的数据发送出去  		 
 	}
 }
 
@@ -294,7 +232,7 @@ void USART3_IRQHandler(void)
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)	//接收中断
 	{
 		Res = USART_ReceiveData(USART3);	//读取接收到的数据
-		USART_SendData(USART3, Res);			//将接收到的数据发送出去  		 
+//		USART_SendData(USART3, Res);			//将接收到的数据发送出去  		 
 	}
 }
 

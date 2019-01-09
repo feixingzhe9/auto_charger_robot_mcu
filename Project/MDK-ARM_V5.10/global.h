@@ -15,10 +15,10 @@
 #define POWER_ON						1		//正在供电
 #define POWER_OFF						0		//停止供电
 
-//COM1_RX_CNT
-#define COM1_RX_NONE				0		//未收到串口通讯数据
-#define COM1_RX_GET_RIGHT		1		//已收到正确串口通讯数据
-#define COM1_RX_GET_WRONG		2		//已收到错误串口通讯数据
+////COM1_RX_CNT
+//#define COM1_RX_NONE				0		//未收到串口通讯数据
+//#define COM1_RX_GET_RIGHT		1		//已收到正确串口通讯数据
+//#define COM1_RX_GET_WRONG		2		//已收到错误串口通讯数据
 
 //timer_1s_flag
 #define TIME_UP							1		//时间到
@@ -41,10 +41,10 @@ typedef struct power_control
 {
 	uint8_t  control_flag;				//控制充电状态位
 	uint8_t  vol;									//机器人电量
-	uint8_t  power_state;					//供电状态
+//	uint8_t  power_state;					//供电状态
 	uint8_t  err_type;						//故障位
-	uint16_t w;										//角速度
-	uint16_t v;										//线速度
+//	uint16_t w;										//角速度
+//	uint16_t v;										//线速度
     uint8_t ir_left_num;
     uint8_t ir_right_num;
     uint8_t switch_status;

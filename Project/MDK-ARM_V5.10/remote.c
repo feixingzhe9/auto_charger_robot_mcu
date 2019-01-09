@@ -115,7 +115,6 @@ void TIM4_IRQHandler(void)
         i = 0;
         if(RDATA_0)//上升沿捕获
         {
-
             TIM_OC2PolarityConfig(TIM4,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
             TIM_SetCounter(TIM4,0);	   	//清空定时器值
             RmtSta[i]|=0X10;					//标记上升沿已经被捕获
@@ -159,11 +158,9 @@ void TIM4_IRQHandler(void)
     if(TIM_GetITStatus(TIM4,TIM_IT_CC4)!=RESET)
     {
         TIM_ClearFlag(TIM4, TIM_IT_CC4);
-        //        printf("ch 4 \r\n");
         i = 1;
         if(RDATA_1)//上升沿捕获
         {
-
             TIM_OC4PolarityConfig(TIM4, TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
             TIM_SetCounter(TIM4,0);	   	//清空定时器值
             RmtSta[i]|=0X10;					//标记上升沿已经被捕获
@@ -210,7 +207,6 @@ void TIM4_IRQHandler(void)
         i = 2;
         if(RDATA_2)//上升沿捕获
         {
-
             TIM_OC3PolarityConfig(TIM4, TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
             TIM_SetCounter(TIM4,0);	   	//清空定时器值
             RmtSta[i]|=0X10;					//标记上升沿已经被捕获
@@ -282,7 +278,7 @@ u8 Remote_Scan(void)
                 //	        t2=RmtRec;
                 //	        if(t1==(u8)~t2)sta=t1;//键值正确
                 value = t1;
-                printf("%4d:%d->0x%x \r\n",cnt++, i, value);
+                printf("%3d:%d->0x%x \r\n",cnt++, i, value);
             }
             else
             {
@@ -314,31 +310,29 @@ void remote_calculate(uint8_t scan_value)
 
     if(power_ctl.control_flag == CONTROL_STOP)
     {
-        set_stop();
+//        set_stop();
         return;
     }
     else if(power_ctl.control_flag == CONTORL_GOTO_INIT)
     {
         if(range_value > INIT_CTL_RANGE)
         {
-            set_stop();
+//            set_stop();
             return;
         }
         else
         {
-            set_toward();
+//            set_toward();
             return;
         }
     }
     else
     {
         time_out++;				//NEC协议一次通讯110+9+4.5 = 123.5ms
-        //	printf("%x\r\n",scan_value);
         if((scan_value != REMOTE_ID1)&&(scan_value != REMOTE_ID2)&&(time_out <= 10))
         {
             return ;
         }
-        //	printf("scan_value=%x\r\n",scan_value);
         for(i=VALUE_NUM-1;i>0;i--)
         {
             left_value[i] = left_value[i-1];
@@ -371,91 +365,11 @@ void remote_calculate(uint8_t scan_value)
         {
             left += left_value[i];
             right += right_value[i];
-            //		printf("%d,%d,",left_value[i],right_value[i]);
         }
-
 
         power_ctl.ir_left_num = left;
         power_ctl.ir_right_num = right;
 
-
-#if 0
-
-
-        if((left>=RANGE)&&(right>=RANGE))
-        {
-            //		printf("直走\r\n");
-            set_straight();//发送直行
-            //		send_straight();//发送直行
-            prev_dir = STRAIGHT;
-        }
-        else if(range_value <= REDUCE_RANGE_3)
-        {
-            set_toward();//发送向前命令，避免擦伤壳体
-        }
-        else if((left>=RANGE)&&(right<RANGE))
-        {
-            //		printf("右转\r\n");
-            if(prev_dir == TURN_LEFT)
-            {
-                set_straight();//发送直行
-                //			send_straight();//发送直行
-            }
-            else
-            {
-                set_right();//发送右转
-                //			send_right();//发送右转
-            }
-            prev_dir = TURN_RIGHT;
-        }
-        else if((left<RANGE)&&(right>=RANGE))
-        {
-            //		printf("左转\r\n");
-            if(prev_dir == TURN_RIGHT)
-            {
-                set_straight();//发送直行
-                //			send_straight();//发送直行
-            }
-            else
-            {
-                set_left();//发送左转
-                //			send_left();//发送左转
-            }
-            prev_dir = TURN_LEFT;
-        }
-        else
-        {
-            //		printf("原地顺时针转\r\n");
-            if(prev_dir == TURN_LEFT)
-            {
-                if(range_value <= 100)
-                {
-                    set_left();//发送左转
-                }
-                else
-                {
-                    set_high_w(LEFT);//发送左转
-                }
-                //			send_left();//发送左转
-            }
-            else
-            {
-                if(range_value <= 100)
-                {
-                    set_right();//发送右转
-                }
-                else
-                {
-                    set_high_w(RIGHT);//发送右转
-                }
-                //			send_right();//发送右转
-            }
-        }
-#endif
-
-
-
-        //		printf("left= %d,right= %d,light = %d \r\n",left,right,range_value);
     }
 }
 

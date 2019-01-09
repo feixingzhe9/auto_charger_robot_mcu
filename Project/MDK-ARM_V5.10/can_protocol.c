@@ -27,90 +27,11 @@ can_fifo_t can_fifo_ram;
 can_fifo_t *can_fifo = &can_fifo_ram;
 can_pkg_t can_pkg[CAN_FIFO_SIZE] = {0};
 
-//////  function id define  //////
-#define CAN_FUN_ID_RESERVE_0    0x00
-
-#define CAN_FUN_ID_WRITE        0x01
-#define CAN_FUN_ID_READ         0x02
-#define CAN_FUN_ID_TRIGGER      0x03
-
-#define CAN_FUN_ID_RESERVE_4    0x04
-#define CAN_FUN_ID_RESERVE_5    0x05
-
-#define CAN_FUN_ID_RESET        0x06
-
-//////  source id define  //////
-#define CAN_SOURCE_ID_READ_VERSION  0x01
-
-#define CAN_SOURCE_ID_GET_SYS_STATUS    0x80
-
-
-
-#define CAN_READ_DATA               0x80
-uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_in_len, uint8_t *data_out)
-{
-    id->CanID_Struct.ACK = 1;
-    id->CanID_Struct.DestMACID = id->CanID_Struct.SrcMACID;
-    id->CanID_Struct.SrcMACID = CAN_AUTO_CHARGER_ROBOT_MAC_ID;
-    id->CanID_Struct.res = 0;
-    switch(id->CanID_Struct.FUNC_ID)
-    {
-        case CAN_FUN_ID_RESET:
-          //platform_mcu_reset();
-          break;
-        case CAN_FUN_ID_WRITE:
-        case CAN_FUN_ID_READ:
-          switch(id->CanID_Struct.SourceID)
-          {
-            case CAN_SOURCE_ID_READ_VERSION:
-                if(data_in_len == 1)
-                {
-                    memcpy(&data_out[1],SW_VERSION,sizeof(SW_VERSION));
-                    data_out[0] = strlen(SW_VERSION);
-                    return (data_out[0] + 1);
-                }
-
-                break;
-            case CAN_SOURCE_ID_GET_SYS_STATUS:
-                power_ctl.control_flag  = data_in[0];
-                power_ctl.vol 		    = data_in[1];
-            
-            
-                //data_out[0] = power_ctl.power_state;
-                data_out[0] = power_ctl.switch_status;
-                data_out[1] = power_ctl.err_type;
-                data_out[2] = power_ctl.ir_left_num;
-                data_out[3] = power_ctl.ir_right_num;
-                data_out[4] = (uint8_t)(range_value/10);
-            
-#if 0
-                data_out[2] = power_ctl.v>>8;
-                data_out[3] = power_ctl.v;
-                data_out[4] = power_ctl.w>>8;
-                data_out[5] = power_ctl.w;
-#endif
-            
-                
-                return 5;
-//                break;
-                
-            
-                
-            default :
-              break;
-          }       
-        default: 
-          break;
-    }  
-    return 0;
-}
-
 
 #define ONLYONCE       0x00
 #define BEGIN         0x01
 #define TRANSING       0x02
 #define END            0x03
-
 
 void Can1_TX(uint32_t CANx_ID,uint8_t* pdata,uint16_t len)
 {
@@ -205,6 +126,76 @@ void Can1_TX(uint32_t CANx_ID,uint8_t* pdata,uint16_t len)
         }
         
 	}
+}
+
+void upload_multi_ir_info(void)
+{
+    CAN_ID_UNION id;
+    uint8_t data_buf[6] = {0};
+    id.CanID_Struct.ACK = 0;
+    id.CanID_Struct.SourceID = CAN_SOURCE_ID_MULTI_IR_INFO;
+    id.CanID_Struct.DestMACID = 0;
+    id.CanID_Struct.FUNC_ID = 0;
+    id.CanID_Struct.res = 0;
+    Can1_TX(id.CANx_ID, data_buf, 6);
+}
+
+void upload_sys_info(void)
+{
+    CAN_ID_UNION id;
+    uint8_t data_buf[6] = {0};
+    id.CanID_Struct.ACK = 0;
+    id.CanID_Struct.SourceID = CAN_SOURCE_ID_SYS_INFO;
+    id.CanID_Struct.DestMACID = 0;
+    id.CanID_Struct.FUNC_ID = 0;
+    id.CanID_Struct.res = 0;
+    Can1_TX(id.CANx_ID, data_buf, 6);
+}
+
+#define CAN_READ_DATA               0x80
+uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_in_len, uint8_t *data_out)
+{
+    id->CanID_Struct.ACK = 1;
+    id->CanID_Struct.DestMACID = id->CanID_Struct.SrcMACID;
+    id->CanID_Struct.SrcMACID = CAN_AUTO_CHARGER_ROBOT_MAC_ID;
+    id->CanID_Struct.res = 0;
+    switch(id->CanID_Struct.FUNC_ID)
+    {
+        case CAN_FUN_ID_RESET:
+          //platform_mcu_reset();
+          break;
+        case CAN_FUN_ID_WRITE:
+        case CAN_FUN_ID_READ:
+          switch(id->CanID_Struct.SourceID)
+          {
+            case CAN_SOURCE_ID_READ_VERSION:
+                if(data_in_len == 1)
+                {
+                    memcpy(&data_out[1],SW_VERSION,sizeof(SW_VERSION));
+                    data_out[0] = strlen(SW_VERSION);
+                    return (data_out[0] + 1);
+                }
+
+                break;
+            case CAN_SOURCE_ID_GET_SYS_STATUS:
+                power_ctl.control_flag  = data_in[0];
+                power_ctl.vol 		    = data_in[1];
+
+                //data_out[0] = power_ctl.power_state;
+                data_out[0] = power_ctl.switch_status;
+                data_out[1] = power_ctl.err_type;
+                data_out[2] = power_ctl.ir_left_num;
+                data_out[3] = power_ctl.ir_right_num;
+                data_out[4] = (uint8_t)(range_value/10);
+                return 5;
+
+            default :
+              break;
+          }
+        default:
+          break;
+    }
+    return 0;
 }
 
 

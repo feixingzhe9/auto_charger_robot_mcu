@@ -37,6 +37,29 @@
 #define SOURCE_ID_CHECK_TRANSMIT        0x12
 
 
+
+//////  function id define  //////
+#define CAN_FUN_ID_RESERVE_0    0x00
+
+#define CAN_FUN_ID_WRITE        0x01
+#define CAN_FUN_ID_READ         0x02
+#define CAN_FUN_ID_TRIGGER      0x03
+
+#define CAN_FUN_ID_RESERVE_4    0x04
+#define CAN_FUN_ID_RESERVE_5    0x05
+
+#define CAN_FUN_ID_RESET        0x06
+
+//////  source id define  //////
+#define CAN_SOURCE_ID_READ_VERSION  0x01
+
+#define CAN_SOURCE_ID_GET_SYS_STATUS    0x80
+#define CAN_SOURCE_ID_MULTI_IR_INFO     0x90
+#define CAN_SOURCE_ID_SYS_INFO          0x91
+
+
+
+
 #define CAN_FIFO_SIZE                   250
 typedef union
 {

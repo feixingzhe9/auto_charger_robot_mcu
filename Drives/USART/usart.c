@@ -63,7 +63,7 @@
 uint16_t COM_RX_STA = 0;
 
 /* ´®¿Ú½ÓÊÕ»º³å */
-uint8_t COM_RX_BUF[COM_RX_LEN];
+//uint8_t COM_RX_BUF[COM_RX_LEN];
 #endif
 
 /******************************* @printf  *************************************/
@@ -402,96 +402,5 @@ void COM1_DMA_init(uint32_t BaudRate)
 //	COM_DMA_receive_init(Uart_Rx, 115200);	
 }
 
-void reply_usart1(void)
-{
-	uint8_t head = 0x5a;
-	uint8_t end  = 0xa5;
-	uint8_t check = 0;
-	uint8_t i = 0;
-	
-	Uart_Tx[0] = head;
-	Uart_Tx[1] = power_ctl.power_state;
-	Uart_Tx[2] = power_ctl.err_type;
-	Uart_Tx[3] = power_ctl.v>>8;
-	Uart_Tx[4] = power_ctl.v;
-	Uart_Tx[5] = power_ctl.w>>8;
-	Uart_Tx[6] = power_ctl.w;
-	Uart_Tx[7] = (uint8_t)(range_value/10);
-	for(i = 0;i<8;i++)
-	{
-		check += Uart_Tx[i];
-	}
-	Uart_Tx[8] = check;
-	Uart_Tx[9] = end;
-	
-	COM1_DMA_send_data(10);
-}
-
-void send_straight(void)
-{
-	uint8_t v;
-	uint8_t straight_buf[12] = {0};
-	v = (navigation_mode == NAVIGATION_1)?V_1:(navigation_mode == NAVIGATION_2)?V_2:V_3;
-	
-	straight_buf[0] = 0x55;
-	straight_buf[1] = 0x00;
-	straight_buf[2] = v;
-	straight_buf[3] = 0x00;
-	straight_buf[4] = 0x00;
-	straight_buf[5] = 0x00;
-	straight_buf[6] = 0x00;
-	straight_buf[7] = 0x00;
-	straight_buf[8] = 0x00;
-	straight_buf[9] = 0x00;
-	straight_buf[10] = (uint8_t)(v+0x55);
-	straight_buf[11] = 0xAA;
-	
-	RS232_Send_Data(straight_buf,12);
-}
-
-void send_left(void)
-{
-	uint8_t w;
-	uint8_t left_buf[12] = {0};
-	w = (navigation_mode == NAVIGATION_1)?W_1:(navigation_mode == NAVIGATION_2)?W_2:W_3;
-	
-	left_buf[0] = 0x55;
-	left_buf[1] = 0x00;
-	left_buf[2] = 0x00;
-	left_buf[3] = 0x00;
-	left_buf[4] = w;
-	left_buf[5] = 0x00;
-	left_buf[6] = 0x00;
-	left_buf[7] = 0x00;
-	left_buf[8] = 0x00;
-	left_buf[9] = 0x00;
-	left_buf[10] = (uint8_t)(w+0x55);
-	left_buf[11] = 0xAA;
-	
-	RS232_Send_Data(left_buf,12);
-}
-
-void send_right(void)
-{
-	uint8_t w;
-	uint8_t right_buf[12] = {0};
-	w = (navigation_mode == NAVIGATION_1)?W_1:(navigation_mode == NAVIGATION_2)?W_2:W_3;
-	
-	right_buf[0] = 0x55;
-	right_buf[1] = 0x00;
-	right_buf[2] = 0x00;
-	right_buf[3] = 0xFF;
-	right_buf[4] = (256-w);
-	right_buf[5] = 0x00;
-	right_buf[6] = 0x00;
-	right_buf[7] = 0x00;
-	right_buf[8] = 0x00;
-	right_buf[9] = 0x00;
-	right_buf[10] = (uint8_t)((256-w)+0x55+0xFF);
-	right_buf[11] = 0xAA;
-	
-	RS232_Send_Data(right_buf,12);
-}
 
 
-/********************* (C) COPYRIGHT 2014 WWW.UCORTEX.COM **********END OF FILE**********/

@@ -20,6 +20,6 @@ void calculate_speed(uint8_t vl6180x_status,uint8_t id);
 
 void update_status(uint8_t id);
 
-void com_receive(void);
+
 
 #endif
