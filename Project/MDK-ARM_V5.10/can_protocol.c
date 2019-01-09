@@ -132,13 +132,21 @@ void upload_multi_ir_info(void)
 {
     CAN_ID_UNION id;
     uint8_t data_buf[6] = {0};
-    id.CanID_Struct.ACK = 0;
+    id.CanID_Struct.ACK = 1;
     id.CanID_Struct.SourceID = CAN_SOURCE_ID_MULTI_IR_INFO;
     id.CanID_Struct.DestMACID = 0;
+    id.CanID_Struct.SrcMACID = CAN_AUTO_CHARGER_ROBOT_MAC_ID;
     id.CanID_Struct.FUNC_ID = 0;
     id.CanID_Struct.res = 0;
+    data_buf[0] = ir_signal_intensity.intensity[0].left_intensity;
+    data_buf[1] = ir_signal_intensity.intensity[0].right_intensity;
+    data_buf[2] = ir_signal_intensity.intensity[1].left_intensity;
+    data_buf[3] = ir_signal_intensity.intensity[1].right_intensity;
+    data_buf[4] = ir_signal_intensity.intensity[2].left_intensity;
+    data_buf[5] = ir_signal_intensity.intensity[2].right_intensity;
     Can1_TX(id.CANx_ID, data_buf, 6);
 }
+
 
 void upload_sys_info(void)
 {
@@ -187,7 +195,10 @@ uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_in_len,
                 data_out[2] = power_ctl.ir_left_num;
                 data_out[3] = power_ctl.ir_right_num;
                 data_out[4] = (uint8_t)(range_value/10);
-                return 5;
+
+            /* test code */
+                upload_multi_ir_info();
+                return 0;
 
             default :
               break;

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "usart.h"
+#include "remote.h"
 
 //control_flag
 #define CONTROL_STOP				0		//¹Ø±Õ³äµç
@@ -51,8 +52,35 @@ typedef struct power_control
 }POWER_CONTROL;
 
 
+typedef struct
+{
+    uint32_t ir_left_num;
+    uint32_t ir_right_num;
+}ir_rcv_channel_info_t;
+
+typedef struct
+{
+    ir_rcv_channel_info_t ir_channel[3];
+}ir_rcv_info_t;
+
+typedef struct
+{
+    uint8_t left_intensity;
+    uint8_t right_intensity;
+}ir_channel_signal_intensity_t;
+
+
+typedef struct
+{
+    ir_channel_signal_intensity_t intensity[3];
+}ir_signal_intensity_t;
+
+extern ir_signal_intensity_t ir_signal_intensity;
+
 extern POWER_CONTROL power_ctl;
 extern uint8_t COM1_RX_STATE;
 extern uint8_t timer_1s_flag;
+
+extern ir_rcv_info_t ir_info;
 
 #endif

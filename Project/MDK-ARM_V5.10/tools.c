@@ -31,6 +31,11 @@ void calculate_speed(uint8_t vl6180x_status,uint8_t id)
 	remote_calculate(id);
 }
 
+void cal_multi_ir_value(void)
+{
+
+}
+
 void update_status(uint8_t id)
 {
 	static uint8_t switch_status = SWITCH_OFF;

@@ -23,23 +23,24 @@ int main(void)
 	Delay_Init();			//延时初始化
 	//SysTickInit();
     print_uart_init(115200);//串口1初始化
-	
+
 	Timer1_Init(9999, 7199);				//用于中断分时，计数频率 = 72000/(7199+1) = 10kHz，计数到(9999+1)为1s//ok
-	
+
 	I2C_Init();				//初始化I2C接口
-	
+
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	//设置NVIC中断分组2:2位抢占优先级，2位响应优先级 	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级		
-	
+
 	TIM4_CH1_PWM_Init(1895,0);	//72000/(1895+1) = 37.99K			//红外发射初始化		
-	
+
 	Remote_Init();			//红外接收初始化	
-	
+
 	VL6180x_init();
-	
+
 	swtich_init();
     LED_Init();
     CanInit();
-	
+    printf("finish init\r\n");
+
 	while(1)
 	{
 		delay_ms(10);
@@ -54,7 +55,7 @@ int main(void)
 
 		update_status(light_ID);													//更新所有状态
 
-        can_protocol_period();  
+        can_protocol_period();
         IndicatorLed(tick);
     }
 }

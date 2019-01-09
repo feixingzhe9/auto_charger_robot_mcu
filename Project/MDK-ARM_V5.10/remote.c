@@ -24,7 +24,6 @@ void Remote_Init(void)
     GPIO_Init(GPIOB, &GPIO_InitStructure);
     GPIO_SetBits(GPIOB,GPIO_Pin_7);	//初始化GPIOB.9
 
-
     TIM_TimeBaseStructure.TIM_Period = 10000; //设定计数器自动重装值 最大10ms溢出
     TIM_TimeBaseStructure.TIM_Prescaler =(72-1); 	//预分频器,1M的计数频率,1us加1.
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //设置时钟分割:TDTS = Tck_tim
@@ -39,8 +38,6 @@ void Remote_Init(void)
     TIM_ICInitStructure.TIM_ICFilter = 0x03;//IC4F=0011 配置输入滤波器 8个定时器时钟周期滤波
     TIM_ICInit(TIM4, &TIM_ICInitStructure);//初始化定时器输入捕获通道
 
-
-
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_4;  // 选择输入端 IC4映射到TI4上
     TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	//上升沿捕获
     TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
@@ -48,16 +45,12 @@ void Remote_Init(void)
     TIM_ICInitStructure.TIM_ICFilter = 0x03;//IC4F=0011 配置输入滤波器 8个定时器时钟周期滤波
     TIM_ICInit(TIM4, &TIM_ICInitStructure);//初始化定时器输入捕获通道
 
-
-
     TIM_ICInitStructure.TIM_Channel = TIM_Channel_3;  // 选择输入端 IC4映射到TI4上
     TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	//上升沿捕获
     TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
     TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	 //配置输入分频,不分频
     TIM_ICInitStructure.TIM_ICFilter = 0x03;//IC4F=0011 配置输入滤波器 8个定时器时钟周期滤波
     TIM_ICInit(TIM4, &TIM_ICInitStructure);//初始化定时器输入捕获通道
-
-
 
     TIM_Cmd(TIM4,ENABLE ); 	//使能定时器4
 
@@ -279,6 +272,14 @@ u8 Remote_Scan(void)
                 //	        if(t1==(u8)~t2)sta=t1;//键值正确
                 value = t1;
                 printf("%3d:%d->0x%x \r\n",cnt++, i, value);
+                if(t1==REMOTE_ID1)
+                {
+                    ir_info.ir_channel[i].ir_left_num++;
+                }
+                if(t1==REMOTE_ID2)
+                {
+                    ir_info.ir_channel[i].ir_right_num++;
+                }
             }
             else
             {
@@ -295,34 +296,30 @@ u8 Remote_Scan(void)
     return value;
 }
 
-u8 left_value[VALUE_NUM] = {0};
-u8 right_value[VALUE_NUM] = {0};
+u8 left_value[REMOTE_RCV_INTERFACE_NUM][VALUE_NUM] = {{0}};
+u8 right_value[REMOTE_RCV_INTERFACE_NUM][VALUE_NUM] = {{0}};
 
-static u8 prev_dir = START;
-uint8_t navigation_mode = NAVIGATION_1;
 
 void remote_calculate(uint8_t scan_value)
 {
     int8_t i;
+    uint8_t j = 0;
     static u8 time_out = 0;
-    u8 left = 0;
-    u8 right = 0;
+    u8 left[REMOTE_RCV_INTERFACE_NUM] = {0};
+    u8 right[REMOTE_RCV_INTERFACE_NUM] = {0};
 
     if(power_ctl.control_flag == CONTROL_STOP)
     {
-//        set_stop();
         return;
     }
     else if(power_ctl.control_flag == CONTORL_GOTO_INIT)
     {
         if(range_value > INIT_CTL_RANGE)
         {
-//            set_stop();
             return;
         }
         else
         {
-//            set_toward();
             return;
         }
     }
@@ -333,43 +330,65 @@ void remote_calculate(uint8_t scan_value)
         {
             return ;
         }
-        for(i=VALUE_NUM-1;i>0;i--)
+#if 1
+        for(j = 0; j < REMOTE_RCV_INTERFACE_NUM; j++)
         {
-            left_value[i] = left_value[i-1];
-            right_value[i] = right_value[i-1];
-        }
+            for(i = VALUE_NUM - 1; i > 0; i--)
+            {
+                left_value[j][i] = left_value[j][i - 1];
+                right_value[j][i] = right_value[j][i - 1];
+            }
+//            if(ir_info.ir_channel[j].ir_left_num > 0)
+            {
+                left_value[j][0] = ir_info.ir_channel[j].ir_left_num;
+                right_value[j][0] = ir_info.ir_channel[j].ir_right_num;
+                if(ir_info.ir_channel[j].ir_left_num > 0)
+                {
+                    time_out = 0;
+                }
+                if(ir_info.ir_channel[j].ir_right_num > 0)
+                {
+                    time_out = 0;
+                }
+                ir_info.ir_channel[j].ir_left_num = 0;
+                ir_info.ir_channel[j].ir_right_num = 0;
+            }
 
-        if(scan_value == REMOTE_ID1)
-        {
-            time_out = 0;
-            left_value[0] = 1;
-            right_value[0] = 0;
-        }
-        else if(scan_value == REMOTE_ID2)
-        {
-            time_out = 0;
-            left_value[0] = 0;
-            right_value[0] = 1;
-        }
-        else
-        {
             if(time_out > 10)
             {
                 time_out = 0;
-                left_value[0] = 0;
-                right_value[0] = 0;
             }
+
+            for(i = 0; i < VALUE_NUM; i++)
+            {
+                left[j] += left_value[j][i];
+                right[j] += right_value[j][i];
+            }
+
+            ir_signal_intensity.intensity[j].left_intensity = left[j];
+            ir_signal_intensity.intensity[j].right_intensity = right[j];
         }
-
-        for(i=0;i<VALUE_NUM;i++)
-        {
-            left += left_value[i];
-            right += right_value[i];
-        }
-
-        power_ctl.ir_left_num = left;
-        power_ctl.ir_right_num = right;
-
+#endif
+//        for(i = 0; i < REMOTE_RCV_INTERFACE_NUM; i++)
+//        {
+//            ir_signal_intensity.intensity[i].left_intensity = ir_info.ir_channel[i].ir_left_num;
+//            if(ir_info.ir_channel[i].ir_left_num != 0)
+//            {
+//                ir_info.ir_channel[i].ir_left_num = 0;
+//                time_out = 0;
+//            }
+//
+//            ir_signal_intensity.intensity[i].right_intensity = ir_info.ir_channel[i].ir_right_num;
+//            if(ir_info.ir_channel[i].ir_right_num != 0)
+//            {
+//                ir_info.ir_channel[i].ir_right_num = 0;
+//                time_out = 0;
+//            }
+//            if(time_out > 10)
+//            {
+//                time_out = 0;
+//            }
+//        }
     }
 }
 
