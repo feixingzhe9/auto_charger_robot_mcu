@@ -29,8 +29,8 @@ void sys_init()
     swtich_init();
     led_init();
     can_init();
-    wdg_init();
-    wdg_enable();
+//    wdg_init();
+//    wdg_enable();
 }
 
 
@@ -44,7 +44,7 @@ int main(void)
 
     while(1)
     {
-        wdg_feed();
+//        wdg_feed();
         delay_ms(10);
         cnt = (cnt+1)%5;
         tick++;

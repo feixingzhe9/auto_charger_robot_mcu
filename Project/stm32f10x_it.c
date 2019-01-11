@@ -225,50 +225,50 @@ void USART3_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void TIM2_IRQHandler(void)
-{
-    if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET) //发生了更新中断
-    {
-        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);//清除更新中断标志
-        if(capture_status & 0x4000)//捕获到上升沿
-        {
-            if((capture_status & 0x0FFF) >= 0x0FFF)//溢出，捕获的时间太长了
-            {
-                capture_status |= 0x2000;//设置溢出标志
-            }
-            else
-            {
-                capture_status++;//更新事件次数累加
-            }
-        }
-    }
+//void TIM2_IRQHandler(void)
+//{
+//    if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET) //发生了更新中断
+//    {
+//        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);//清除更新中断标志
+//        if(capture_status & 0x4000)//捕获到上升沿
+//        {
+//            if((capture_status & 0x0FFF) >= 0x0FFF)//溢出，捕获的时间太长了
+//            {
+//                capture_status |= 0x2000;//设置溢出标志
+//            }
+//            else
+//            {
+//                capture_status++;//更新事件次数累加
+//            }
+//        }
+//    }
 
-    if(TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET)
-    {
-        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);//清除捕获比较中断标志
+//    if(TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET)
+//    {
+//        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);//清除捕获比较中断标志
 
-        if(capture_status & 0x8000)//上次捕获值未被使用，丢弃掉上次捕获的值
-        {
-            capture_status = 0;
-            capture_rise_val = 0;
-            capture_fall_val = 0;
-        }
+//        if(capture_status & 0x8000)//上次捕获值未被使用，丢弃掉上次捕获的值
+//        {
+//            capture_status = 0;
+//            capture_rise_val = 0;
+//            capture_fall_val = 0;
+//        }
 
-        if((capture_status & 0x4000) == 0)//捕捉到上升沿
-        {
-            capture_rise_val = TIM_GetCapture1(TIM2);//记录捕获值
-            capture_status |= 0X4000;//标志捕捉到上升沿
-            TIM_OC1PolarityConfig(TIM2, TIM_ICPolarity_Falling);//设置下降沿捕获
-        }
-        else if(capture_status & 0x4000)//捕获到下降沿
-        {
-            capture_fall_val = TIM_GetCapture1(TIM2); //记录捕获值
-            capture_status &= ~0X4000;//清除上升沿标志
-            capture_status |= 0X8000;//设置捕获完成标志
-            TIM_OC1PolarityConfig(TIM2, TIM_ICPolarity_Rising);//设置为上升沿捕获
-        }
-    }
-}
+//        if((capture_status & 0x4000) == 0)//捕捉到上升沿
+//        {
+//            capture_rise_val = TIM_GetCapture1(TIM2);//记录捕获值
+//            capture_status |= 0X4000;//标志捕捉到上升沿
+//            TIM_OC1PolarityConfig(TIM2, TIM_ICPolarity_Falling);//设置下降沿捕获
+//        }
+//        else if(capture_status & 0x4000)//捕获到下降沿
+//        {
+//            capture_fall_val = TIM_GetCapture1(TIM2); //记录捕获值
+//            capture_status &= ~0X4000;//清除上升沿标志
+//            capture_status |= 0X8000;//设置捕获完成标志
+//            TIM_OC1PolarityConfig(TIM2, TIM_ICPolarity_Rising);//设置为上升沿捕获
+//        }
+//    }
+//}
 
 
 /**
