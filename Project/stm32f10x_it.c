@@ -26,8 +26,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "usart.h"
-#include "led.h"
-#include "rtc.h"
 #include "timer.h"
 #include "global.h"
 
@@ -55,6 +53,7 @@ void NMI_Handler(void)
 {
 }
 
+
 /**
   * @brief  This function handles Hard Fault exception.
   * @param  None
@@ -62,11 +61,12 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1)
+    {
+    }
 }
+
 
 /**
   * @brief  This function handles Memory Manage exception.
@@ -75,11 +75,12 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1)
+    {
+    }
 }
+
 
 /**
   * @brief  This function handles Bus Fault exception.
@@ -88,11 +89,12 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1)
+   {
 }
+   }
+
 
 /**
   * @brief  This function handles Usage Fault exception.
@@ -101,11 +103,12 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1)
+    {
+    }
 }
+
 
 /**
   * @brief  This function handles SVCall exception.
@@ -114,7 +117,9 @@ void UsageFault_Handler(void)
   */
 void SVC_Handler(void)
 {
+
 }
+
 
 /**
   * @brief  This function handles Debug Monitor exception.
@@ -123,7 +128,9 @@ void SVC_Handler(void)
   */
 void DebugMon_Handler(void)
 {
+
 }
+
 
 /**
   * @brief  This function handles PendSVC exception.
@@ -132,7 +139,9 @@ void DebugMon_Handler(void)
   */
 void PendSV_Handler(void)
 {
+
 }
+
 
 extern uint32_t sys_tick_cnt;
 /**
@@ -144,6 +153,7 @@ void SysTick_Handler(void)
 {
     sys_tick_cnt++;
 }
+
 
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
@@ -157,16 +167,11 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
-//void RTC_IRQHandler(void)
-//{
-//  if (RTC_GetITStatus(RTC_IT_SEC) != RESET)
-//  {
-//    RTC_ClearITPendingBit(RTC_IT_SEC);//清除RTC秒中断标志位
-//    LED=!LED;							//LED翻转
-//    TimeDisplay = 1;			//时间更新标志置1
-//    RTC_WaitForLastTask();//等待RTC寄存器操作完成 
-//  }
-//}
+void RTC_IRQHandler(void)
+{
+
+}
+
 
 /**
   * @brief  EXTI0中断服务程序
@@ -175,13 +180,11 @@ void SysTick_Handler(void)
   */
 void EXTI0_IRQHandler(void)
 {
-  if(EXTI_GetITStatus(EXTI_Line0) != RESET)
-  {
-		LED=!LED;
-    EXTI_ClearITPendingBit(EXTI_Line0);//清除EXTI line0的中断标志
-  }
+    if(EXTI_GetITStatus(EXTI_Line0) != RESET)
+    {
+        EXTI_ClearITPendingBit(EXTI_Line0);
+    }
 }
-
 
 
 /**
@@ -191,18 +194,9 @@ void EXTI0_IRQHandler(void)
   */
 void USART1_IRQHandler()
 {
-	if(USART_GetITStatus(USART1,USART_IT_RXNE) != RESET)
-	{
-		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-        USART_ReceiveData(USART1);
-	}
 
-	if(USART_GetFlagStatus(USART1,USART_FLAG_ORE) == SET) //判断是否溢出    
-	{       
-		USART_ClearFlag(USART1,USART_FLAG_ORE); //?SR     
-		USART_ReceiveData(USART1); //?DR    
-	}
 }
+
 
 /**
   * @brief  USART2串口中断
@@ -211,14 +205,9 @@ void USART1_IRQHandler()
   */
 void USART2_IRQHandler(void)
 {
-	uint8_t Res;
-	
-	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)	//接收中断
-	{
-		Res = USART_ReceiveData(USART2);	//读取接收到的数据
-//		USART_SendData(USART2, Res);			//将接收到的数据发送出去  		 
-	}
+
 }
+
 
 /**
   * @brief  USART3串口中断
@@ -227,14 +216,9 @@ void USART2_IRQHandler(void)
   */
 void USART3_IRQHandler(void)
 {
-	uint8_t Res;
-	
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)	//接收中断
-	{
-		Res = USART_ReceiveData(USART3);	//读取接收到的数据
-//		USART_SendData(USART3, Res);			//将接收到的数据发送出去  		 
-	}
+
 }
+
 
 /**
   * @brief  This function handles TIM3 global interrupt request.
@@ -243,78 +227,72 @@ void USART3_IRQHandler(void)
   */
 void TIM2_IRQHandler(void)
 {
-	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET) //发生了更新中断
-	{
-		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);//清除更新中断标志
-		if(CaptureStatus&0X4000)//捕获到上升沿
-		{
-			if((CaptureStatus&0X0FFF)>=0X0FFF)//溢出，捕获的时间太长了
-			{
-				CaptureStatus|=0X2000;//设置溢出标志
-			}
-			else
-			{
-				CaptureStatus++;//更新事件次数累加
-			}
-		}
-	}
-	
-  if(TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET) 
-  {
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);//清除捕获比较中断标志
-		
-		if(CaptureStatus&0X8000)//上次捕获值未被使用，丢弃掉上次捕获的值
-		{
-			CaptureStatus = 0;
-			CaptureValue1 = 0;
-			CaptureValue2 = 0;
-		}
-		
-    if((CaptureStatus&0X4000) == 0)//捕捉到上升沿
+    if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET) //发生了更新中断
     {
-      CaptureValue1 = TIM_GetCapture1(TIM2);//记录捕获值
-      CaptureStatus |= 0X4000;//标志捕捉到上升沿
-			TIM_OC1PolarityConfig(TIM2,TIM_ICPolarity_Falling);//设置下降沿捕获
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);//清除更新中断标志
+        if(capture_status & 0x4000)//捕获到上升沿
+        {
+            if((capture_status & 0x0FFF) >= 0x0FFF)//溢出，捕获的时间太长了
+            {
+                capture_status |= 0x2000;//设置溢出标志
+            }
+            else
+            {
+                capture_status++;//更新事件次数累加
+            }
+        }
     }
-    else if(CaptureStatus&0X4000)//捕获到下降沿
+
+    if(TIM_GetITStatus(TIM2, TIM_IT_CC1) == SET)
     {
-      CaptureValue2 = TIM_GetCapture1(TIM2); //记录捕获值
-      CaptureStatus &= ~0X4000;	//清除上升沿标志
-			CaptureStatus |= 0X8000;	//设置捕获完成标志
-			TIM_OC1PolarityConfig(TIM2,TIM_ICPolarity_Rising);//设置为上升沿捕获
+        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);//清除捕获比较中断标志
+
+        if(capture_status & 0x8000)//上次捕获值未被使用，丢弃掉上次捕获的值
+        {
+            capture_status = 0;
+            capture_rise_val = 0;
+            capture_fall_val = 0;
+        }
+
+        if((capture_status & 0x4000) == 0)//捕捉到上升沿
+        {
+            capture_rise_val = TIM_GetCapture1(TIM2);//记录捕获值
+            capture_status |= 0X4000;//标志捕捉到上升沿
+            TIM_OC1PolarityConfig(TIM2, TIM_ICPolarity_Falling);//设置下降沿捕获
+        }
+        else if(capture_status & 0x4000)//捕获到下降沿
+        {
+            capture_fall_val = TIM_GetCapture1(TIM2); //记录捕获值
+            capture_status &= ~0X4000;//清除上升沿标志
+            capture_status |= 0X8000;//设置捕获完成标志
+            TIM_OC1PolarityConfig(TIM2, TIM_ICPolarity_Rising);//设置为上升沿捕获
+        }
     }
-  }
 }
 
+
 /**
-  * @brief  定时器3中断服务程序
-  * @param  None
-  * @retval None
-  */
+* @brief  定时器3中断服务程序
+* @param  None
+* @retval None
+*/
 void TIM3_IRQHandler(void)   //TIM3中断
 {
-	
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查TIM3更新中断发生与否
-	{
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  ); //清除TIM3更新中断标志 
-		
-		timer_1s_flag = TIME_UP;
-//		GPIO_ResetBits(GPIOA,GPIO_Pin_9);
-
-	}
+    if(TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)//检查TIM3更新中断发生与否
+    {
+        TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );//清除TIM3更新中断标志
+        timer_1s_flag = TIME_UP;
+    }
 }
 
-/**
-  * @}
-  */ 
 
 void DMA1_Channel4_IRQHandler(void)
 {
-		if(DMA_GetITStatus(DMA1_FLAG_TC4) != RESET) 
-		{
-			DMA_ClearFlag(DMA1_FLAG_TC4);         // 清除标志
-			DMA_Cmd(DMA1_Channel4, DISABLE);   // 关闭DMA通道			
-		}
+    if(DMA_GetITStatus(DMA1_FLAG_TC4) != RESET)
+    {
+        DMA_ClearFlag(DMA1_FLAG_TC4);         // 清除标志
+        DMA_Cmd(DMA1_Channel4, DISABLE);   // 关闭DMA通道
+    }
 }
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

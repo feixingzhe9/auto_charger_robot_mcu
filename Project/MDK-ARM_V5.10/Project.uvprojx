@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>UCORTEX</TargetName>
+      <TargetName>CHARGE_ROBOT</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
@@ -133,7 +133,7 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4103</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
@@ -335,7 +335,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\FWLib_3_5_0\CMSIS\CM3\CoreSupport;..\..\FWLib_3_5_0\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\inc;..\..\Project;..\..\Drives\LED;..\..\Drives\KEY;..\..\Common\DELAY;..\..\Drives\USART;..\..\Common;..\..\Drives\OLED;..\..\Drives\LCM1602;..\..\Drives\LCM12864;..\..\Drives\ADC;..\..\Drives\JOYSTICK;..\..\Drives\TIMER;..\..\Drives\RTC;..\..\Drives\EXTI;..\..\Drives\STANDBY;..\..\Drives\DMA;..\..\Drives\BEEP;..\..\Drives\EEPROM;..\..\Drives\SPI;..\..\Drives\NRF24L01;..\..\Drives\I2C;..\..\Drives\MPU6050;..\MDK-ARM_V5.10;.\RTE;..\..\VL6180_API_3.2.0_Extended_Range\config\extended_range;..\..\VL6180_API_3.2.0_Extended_Range\core\inc;..\..\VL6180_API_3.2.0_Extended_Range\example\code_samples;..\..\VL6180_API_3.2.0_Extended_Range\platform\cci-i2c;..\..\VL6180_API_3.2.0_Extended_Range\platform\template;..\..\Drives\CAN;..\..\Common\Platform</IncludePath>
+              <IncludePath>..\..\FWLib_3_5_0\CMSIS\CM3\CoreSupport;..\..\FWLib_3_5_0\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\inc;..\..\Project;..\..\Drives\LED;..\..\Drives\KEY;..\..\Common\DELAY;..\..\Drives\USART;..\..\Common;..\..\Drives\TIMER;..\..\Drives\EXTI;..\..\Drives\DMA;..\..\Drives\I2C;..\MDK-ARM_V5.10;.\RTE;..\..\VL6180_API_3.2.0_Extended_Range\config\extended_range;..\..\VL6180_API_3.2.0_Extended_Range\core\inc;..\..\VL6180_API_3.2.0_Extended_Range\example\code_samples;..\..\VL6180_API_3.2.0_Extended_Range\platform\cci-i2c;..\..\VL6180_API_3.2.0_Extended_Range\platform\template;..\..\Drives\CAN;..\..\Common\Platform;..\..\Drives\WDG</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -377,7 +377,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>PROJECT</GroupName>
+          <GroupName>user</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
@@ -415,11 +415,6 @@
               <FilePath>.\global.c</FilePath>
             </File>
             <File>
-              <FileName>can_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\can_fifo.c</FilePath>
-            </File>
-            <File>
               <FileName>tools.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\tools.c</FilePath>
@@ -429,10 +424,15 @@
               <FileType>1</FileType>
               <FilePath>.\can_protocol.c</FilePath>
             </File>
+            <File>
+              <FileName>can_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\can_fifo.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>DRIVERS</GroupName>
+          <GroupName>drv</GroupName>
           <Files>
             <File>
               <FileName>led.c</FileName>
@@ -450,9 +450,19 @@
               <FilePath>..\..\Drives\TIMER\timer.c</FilePath>
             </File>
             <File>
+              <FileName>exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drives\EXTI\exti.c</FilePath>
+            </File>
+            <File>
               <FileName>dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drives\DMA\dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drives\I2C\i2c.c</FilePath>
             </File>
             <File>
               <FileName>can.c</FileName>
@@ -460,14 +470,14 @@
               <FilePath>..\..\Drives\CAN\can.c</FilePath>
             </File>
             <File>
-              <FileName>i2c.c</FileName>
+              <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Drives\I2C\i2c.c</FilePath>
+              <FilePath>..\..\Drives\WDG\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>VL6180X</GroupName>
+          <GroupName>vl6180</GroupName>
           <Files>
             <File>
               <FileName>vl6180x_api.c</FileName>
@@ -482,7 +492,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>COMMON</GroupName>
+          <GroupName>comm</GroupName>
           <Files>
             <File>
               <FileName>delay.c</FileName>
@@ -497,7 +507,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>FWLib_3_5_0</GroupName>
+          <GroupName>lib</GroupName>
           <Files>
             <File>
               <FileName>misc.c</FileName>
@@ -535,14 +545,14 @@
               <FilePath>..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_bkp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\src\stm32f10x_bkp.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f10x_pwr.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\src\stm32f10x_pwr.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\src\stm32f10x_rtc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_dma.c</FileName>
@@ -554,10 +564,15 @@
               <FileType>1</FileType>
               <FilePath>..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\src\stm32f10x_can.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\FWLib_3_5_0\STM32F10x_StdPeriph_Driver\src\stm32f10x_iwdg.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>CMSIS</GroupName>
+          <GroupName>cm</GroupName>
           <Files>
             <File>
               <FileName>core_cm3.c</FileName>
@@ -568,16 +583,6 @@
               <FileName>startup_stm32f10x_md.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\FWLib_3_5_0\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\arm\startup_stm32f10x_md.s</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>DOC</GroupName>
-          <Files>
-            <File>
-              <FileName>例程说明.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\例程说明.txt</FilePath>
             </File>
           </Files>
         </Group>
@@ -594,7 +599,7 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="Cortex-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
         <targetInfos>
-          <targetInfo name="UCORTEX"/>
+          <targetInfo name="CHARGE_ROBOT"/>
         </targetInfos>
       </component>
     </components>

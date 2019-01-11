@@ -14,6 +14,8 @@
 
 #include "vl6180x_platform.h"
 #include "stm32f10x.h"
+
+
 /**
  * @defgroup cci_i2c  CCI to RAW I2C translation layer
  *
@@ -155,12 +157,10 @@ void VL6180x_DoneI2CAccess(VL6180xDev_t dev);
  * @ingroup cci_i2c
  */
 uint8_t *VL6180x_GetI2cBuffer(VL6180xDev_t dev, int n_byte);
+
 #if I2C_BUFFER_CONFIG == 2
 #error /* TODO add your macro of code here for VL6180x_GetI2cBuffer */
 #endif
 
-
-
-
-
 #endif /* VL6180_I2C_H_ */
+
