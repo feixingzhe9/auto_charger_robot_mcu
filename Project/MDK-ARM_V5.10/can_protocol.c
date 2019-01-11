@@ -198,7 +198,7 @@ uint16_t CmdProcessing(CAN_ID_UNION *id, uint8_t *data_in, uint16_t data_in_len,
 
             /* test code */
                 upload_multi_ir_info();
-                return 0;
+                return 5;
 
             default :
               break;

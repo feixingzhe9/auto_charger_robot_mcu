@@ -105,7 +105,7 @@ void TIM4_IRQHandler(void)
     if(TIM_GetITStatus(TIM4,TIM_IT_CC2)!=RESET)
     {
         TIM_ClearFlag(TIM4, TIM_IT_CC2);
-        i = 0;
+        i = 1;
         if(RDATA_0)//上升沿捕获
         {
             TIM_OC2PolarityConfig(TIM4,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
@@ -151,7 +151,7 @@ void TIM4_IRQHandler(void)
     if(TIM_GetITStatus(TIM4,TIM_IT_CC4)!=RESET)
     {
         TIM_ClearFlag(TIM4, TIM_IT_CC4);
-        i = 1;
+        i = 0;
         if(RDATA_1)//上升沿捕获
         {
             TIM_OC4PolarityConfig(TIM4, TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
