@@ -4,6 +4,7 @@
 #include "math.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "platform.h"
 
 //#define RCC_TIMER4           RCC_APB1Periph_TIM4
 //#define RCC_IR               RCC_APB2Periph_GPIOB
@@ -398,7 +399,7 @@ uint8_t remote_scan(void)
     uint8_t cmd_pos_code = 0;
     uint8_t cmd_neg_code = 0;
     uint8_t i = 0;
-    static uint32_t ir_rcv_cnt = 0;
+//    static uint32_t ir_rcv_cnt = 0;
     for(i = 0; i < REMOTE_RCV_INTERFACE_NUM; i++)
     {
         if(remote_state[i] & (1<<6))//得到一个按键的所有信息了
@@ -415,7 +416,7 @@ uint8_t remote_scan(void)
                     if((addr_pos_code == REMOTE_LEFT) || (addr_pos_code == REMOTE_RIGHT) || (addr_pos_code == REMOTE_POWER_ON) || (addr_pos_code == REMOTE_POWER_OFF))
                     {
                         value = addr_pos_code;
-                        printf("%3d:%d-> 0x%x\r\n", ir_rcv_cnt++, i, value);
+//                        printf("%3d:%d-> 0x%x\r\n", ir_rcv_cnt++, i, value);
                         if(addr_pos_code == REMOTE_LEFT)
                         {
                             ir_info.ir_channel[i].ir_left_num++;
@@ -455,20 +456,25 @@ uint8_t remote_scan(void)
 }
 
 
-void remote_calculate(uint8_t scan_value)
+#define NEC_IR_COM_PERIOD   124 / SYSTICK_PERIOD    //NEC协议一次通讯110+9+4.5 = 123.5ms
+void remote_calculate(void)
 {
     uint8_t i, j;
 
     uint8_t left[REMOTE_RCV_INTERFACE_NUM] = {0};
     uint8_t right[REMOTE_RCV_INTERFACE_NUM] = {0};
-    static uint8_t time_out = 0;
+    static uint32_t start_tick = 0;
+//    static uint8_t time_out = 0;
 
-    time_out++;//NEC协议一次通讯110+9+4.5 = 123.5ms
-    if((scan_value != REMOTE_LEFT) && (scan_value != REMOTE_RIGHT) && (time_out <= 10))
+//    time_out++;//NEC协议一次通讯110+9+4.5 = 123.5ms
+//    if((scan_value != REMOTE_LEFT) && (scan_value != REMOTE_RIGHT) && (time_out <= 10))
+//    if((scan_value != REMOTE_LEFT) && (scan_value != REMOTE_RIGHT) && (get_tick() - start_tick < NEC_IR_COM_PERIOD))
+    if((get_tick() - start_tick < NEC_IR_COM_PERIOD))
     {
         return ;
     }
 
+    start_tick = get_tick();
     for(j = 0; j < REMOTE_RCV_INTERFACE_NUM; j++)
     {
         for(i = VALUE_NUM - 1; i > 0; i--)
@@ -483,8 +489,7 @@ void remote_calculate(uint8_t scan_value)
         ir_info.ir_channel[j].ir_left_num = 0;
         ir_info.ir_channel[j].ir_right_num = 0;
 
-        time_out = 0;
-
+//        time_out = 0;
         for(i = 0; i < VALUE_NUM; i++)
         {
             left[j] += left_value[j][i];

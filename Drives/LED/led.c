@@ -1,10 +1,10 @@
 #include "led.h"
-
+#include "platform.h"
 #define RCC_LED             RCC_APB2Periph_GPIOB
 #define GPIO_LED            GPIOB
 #define GPIO_Pin_LED        GPIO_Pin_1
 
-#define LED_PERIOD          50
+#define LED_PERIOD          500 / SYSTICK_PERIOD
 
 void led_init(void)
 {
@@ -33,16 +33,12 @@ static void led_off(void)
 }
 
 
-void led_indicator(uint32_t tick)
+void led_indicator(void)
 {
     static uint32_t start_tick = 0;
     static uint8_t cnt = 0;
 
-    if(start_tick == 0)
-    {
-        start_tick = tick;
-    }
-    if(tick - start_tick >= LED_PERIOD)
+    if(get_tick() - start_tick >= LED_PERIOD)
     {
         if(cnt++ % 2)
         {
@@ -52,6 +48,6 @@ void led_indicator(uint32_t tick)
         {
             led_off();
         }
-        start_tick = tick;
+        start_tick = get_tick();
     }
 }

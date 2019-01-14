@@ -8,8 +8,8 @@
 #include "switch.h"
 #include "timer.h"
 
-uint8_t calculate_length(uint8_t cnt);
-void update_status(uint8_t id);
+uint8_t calculate_length(void);
+void update_status(void);
 void com_receive(void);
 
 #endif

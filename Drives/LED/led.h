@@ -5,6 +5,7 @@
 #include "bitband.h"
 
 void led_init(void);
-void led_indicator(uint32_t tick);
+//void led_indicator(uint32_t tick);
+void led_indicator(void);
 
 #endif

@@ -1,4 +1,5 @@
 #include "tools.h"
+#include "platform.h"
 
 #define REMOTE_ID_POWER_1     0x33
 #define REMOTE_ID_POWER_2     0x66
@@ -6,19 +7,35 @@
 #define REMOTE_ID_POWER_4     0xbb
 #define REMOTE_ID_POWER_MAX   0xFF
 
-
-uint8_t calculate_length(uint8_t cnt)
+#define VL6180_IDLE_PERIOD      15 / SYSTICK_PERIOD
+#define VL6180_MEASURE_PERIOD   50 / SYSTICK_PERIOD
+uint8_t calculate_length(void)
 {
     static uint8_t status = 0;
+    static uint8_t m_state = 0;
+    static uint32_t start_tick = 0;
 
-    if(cnt == 0)
+    switch(m_state)
     {
-        status = vl6180x_start();
+        case 0:
+            if(get_tick() -  start_tick > VL6180_IDLE_PERIOD)
+            {
+                status = vl6180x_start();
+                start_tick = get_tick();
+                m_state = 1;
+            }
+            break;
+        case 1:
+            if(get_tick() -  start_tick > VL6180_MEASURE_PERIOD)
+            {
+                status = vl6180x_finish();
+                start_tick = get_tick();
+                m_state = 0;
+            }
+            break;
+        default: break;
     }
-    if(cnt == 4)
-    {
-        status = vl6180x_finish();
-    }
+
 
     if(status == 0)
     {
@@ -33,12 +50,14 @@ uint8_t calculate_length(uint8_t cnt)
 }
 
 
-void update_status(uint8_t id)
+#define SWITCH_ON_DELAY_TICK    80 / SYSTICK_PERIOD
+void update_status(void)
 {
     static uint8_t switch_status = SWITCH_OFF;
     static uint8_t prev_status = SWITCH_OFF;
     static uint8_t time_out = 0;
-    static uint8_t time_wait = 0;
+//    static uint8_t time_wait = 0;
+    static uint32_t start_tick = 0;
 
     prev_status = switch_status;
     switch_status = switch_scan();
@@ -58,12 +77,16 @@ void update_status(uint8_t id)
     {
         if(prev_status != SWITCH_ON)
         {
-            time_wait = 8;
+//            time_wait = 8;
+            start_tick = get_tick();
         }
 
-        if(time_wait !=0)
+//        if(time_wait !=0)
+//        {
+//            time_wait --;
+//        }
+        if(get_tick() - start_tick >= SWITCH_ON_DELAY_TICK)
         {
-            time_wait --;
         }
         else
         {

@@ -9,7 +9,7 @@
 
 void remote_init(void);
 uint8_t remote_scan(void);
-void remote_calculate(uint8_t scan_value);
+void remote_calculate(void);
 
 #endif
 
