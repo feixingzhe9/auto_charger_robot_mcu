@@ -36,7 +36,7 @@ uint8_t  remote_state[REMOTE_RCV_INTERFACE_NUM] = {0};
 uint16_t fall_edge_val[REMOTE_RCV_INTERFACE_NUM] = {0};
 uint32_t remote_recv[REMOTE_RCV_INTERFACE_NUM] = {0};
 uint8_t  remote_cnt[REMOTE_RCV_INTERFACE_NUM] = {0};
-uint32_t start_tick[REMOTE_RCV_INTERFACE_NUM] = {0};
+uint32_t remote_start_tick[REMOTE_RCV_INTERFACE_NUM] = {0};
 uint32_t timer_tick = 0;
 
 static uint8_t left_value[REMOTE_RCV_INTERFACE_NUM][VALUE_NUM] = {0};
@@ -66,13 +66,13 @@ void remote_init(void)
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 
-    TIM_TimeBaseStructure.TIM_Period = 10000;
+    TIM_TimeBaseStructure.TIM_Period = 5000;
     TIM_TimeBaseStructure.TIM_Prescaler = 71;
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
-//    TIM_TimeBaseStructure.TIM_Period = 10000;
+//    TIM_TimeBaseStructure.TIM_Period = 2500;
 //    TIM_TimeBaseStructure.TIM_Prescaler = 71;
 //    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 //    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Down;
@@ -104,6 +104,7 @@ void remote_init(void)
 
     TIM_Cmd(TIMER_IR, ENABLE);
     TIM_Cmd(TIM2, ENABLE);
+//    TIM_Cmd(TIM1, ENABLE);
 
     NVIC_InitStructure.NVIC_IRQChannel = TIM_INT_IR;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
@@ -128,7 +129,7 @@ void remote_init(void)
 
 
 
-    TIM_ITConfig(TIMER_IR, TIM_IT_Update | TIM_IT_CC2 | TIM_IT_CC3 | TIM_IT_CC4, ENABLE);
+    TIM_ITConfig(TIMER_IR, /*TIM_IT_Update |*/ TIM_IT_CC2 | TIM_IT_CC3 | TIM_IT_CC4, ENABLE);
     TIM_ITConfig(TIM2, TIM_IT_Update , ENABLE);
 //    TIM_ITConfig(TIM1, TIM_IT_Update , ENABLE);
 }
@@ -170,31 +171,36 @@ void TIM2_IRQHandler(void)
     uint8_t i = 0;
     tim_2_cnt_test++;
     timer_tick++;
-    for(i = 0; i < REMOTE_RCV_INTERFACE_NUM; i++)
+    if(TIM_GetITStatus(TIM2, TIM_IT_Update)!= RESET)
     {
-        if(timer_tick - start_tick[i] >= 5)
+        for(i = 0; i < REMOTE_RCV_INTERFACE_NUM; i++)
         {
-            start_tick[i] = timer_tick;
-            if(remote_state[i] & 0x80)/* 上次有数据被接收到了 */
+            if(timer_tick - remote_start_tick[i] >= 10)
             {
-                remote_state[i] &= ~0x10;//取消上升沿已经被捕获标记
-                if((remote_state[i] & 0x0F) == 0x00)
+                remote_start_tick[i] = timer_tick;
+                if(remote_state[i] & 0x80)/* 上次有数据被接收到了 */
                 {
-                    remote_state[i] |= 1<<6;//标记已经完成一次按键的键值信息采集
-                }
+                    remote_state[i] &= ~0x10;//取消上升沿已经被捕获标记
+                    if((remote_state[i] & 0x0F) == 0x00)
+                    {
+                        remote_state[i] |= 1<<6;//标记已经完成一次按键的键值信息采集
+                    }
 
-                if((remote_state[i] & 0x0F) < 14)
-                {
-                    remote_state[i]++;
-                }
-                else
-                {
-                    remote_state[i] &= ~(1<<7);//清空引导标识
-                    remote_state[i] &= 0xF0;//清空计数器
+                    if((remote_state[i] & 0x0F) < 14)
+                    {
+                        remote_state[i]++;
+                    }
+                    else
+                    {
+                        remote_state[i] &= ~(1<<7);//清空引导标识
+                        remote_state[i] &= 0xF0;//清空计数器
+                    }
                 }
             }
+
         }
     }
+
 
     TIM_ClearFlag(TIM2, TIM_IT_Update);
 }
@@ -246,8 +252,8 @@ void TIM4_IRQHandler(void)
         if(RDATA_0)/* 上升沿捕获 */
         {
             TIM_OC2PolarityConfig(TIMER_IR,TIM_ICPolarity_Falling);//CC1P=1 设置为下降沿捕获
-//            TIM_SetCounter(TIMER_IR, 0);//清空定时器值
-            start_tick[i] = timer_tick;
+            TIM_SetCounter(TIMER_IR, 0);//清空定时器值
+            remote_start_tick[i] = timer_tick;
             remote_state[i] |= 0x10;//标记上升沿已经被捕获
         }
         else/* 下降沿捕获 */
@@ -293,8 +299,8 @@ void TIM4_IRQHandler(void)
         if(RDATA_2)/* 上升沿捕获 */
         {
             TIM_OC3PolarityConfig(TIMER_IR, TIM_ICPolarity_Falling);//CC1P=1 设置为下降沿捕获
-//            TIM_SetCounter(TIMER_IR, 0);//清空定时器值
-            start_tick[i] = timer_tick;
+            TIM_SetCounter(TIMER_IR, 0);//清空定时器值
+            remote_start_tick[i] = timer_tick;
             remote_state[i] |= 0x10;//标记上升沿已经被捕获
         }
         else/* 下降沿捕获 */
@@ -340,8 +346,8 @@ void TIM4_IRQHandler(void)
         if(RDATA_1)/* 上升沿捕获 */
         {
             TIM_OC4PolarityConfig(TIMER_IR, TIM_ICPolarity_Falling);//CC1P=1 设置为下降沿捕获
-//            TIM_SetCounter(TIMER_IR, 0);//清空定时器值
-            start_tick[i] = timer_tick;
+            TIM_SetCounter(TIMER_IR, 0);//清空定时器值
+            remote_start_tick[i] = timer_tick;
             remote_state[i] |= 0x10;//标记上升沿已经被捕获
         }
         else/* 下降沿捕获 */

@@ -194,7 +194,8 @@ void EXTI0_IRQHandler(void)
   */
 void USART1_IRQHandler()
 {
-
+    uint8_t data = USART1->DR;
+    data = USART1->SR;
 }
 
 
@@ -205,7 +206,8 @@ void USART1_IRQHandler()
   */
 void USART2_IRQHandler(void)
 {
-
+    uint8_t data = USART2->DR;
+    data = USART2->SR;
 }
 
 
@@ -216,7 +218,8 @@ void USART2_IRQHandler(void)
   */
 void USART3_IRQHandler(void)
 {
-
+    uint8_t data = USART3->DR;
+    data = USART3->SR;
 }
 
 
