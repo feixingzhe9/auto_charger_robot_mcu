@@ -37,10 +37,6 @@ void sys_init()
 
 int main(void)
 {
-//    uint8_t cnt=0;
-//    uint8_t id = 0;
-//    uint32_t tick = 0;
-
     sys_init();
 
     while(1)

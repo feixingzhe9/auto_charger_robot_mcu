@@ -13,7 +13,7 @@
 #include "stm32f10x.h"
 
 #define HW_VERSION                      "11"
-#define SW_VERSION                      "103"
+#define SW_VERSION                      "104"
 #define PROTOCOL_VERSION                "20170505R0101"
 
 #define CAN_USED                        CAN1

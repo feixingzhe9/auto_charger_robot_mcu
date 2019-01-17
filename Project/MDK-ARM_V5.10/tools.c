@@ -85,7 +85,7 @@ void update_status(void)
 //        {
 //            time_wait --;
 //        }
-        if(get_tick() - start_tick >= SWITCH_ON_DELAY_TICK)
+        if(get_tick() - start_tick <= SWITCH_ON_DELAY_TICK)
         {
         }
         else
